@@ -13,4 +13,8 @@ output: pdf_document
 
 ## Introduction
 
-According to the  Journal of the American Medical Association, the leading cause of death in the United States in recent years is linked to unhealthful dietary factors (i.e. diabetes, cancer, etc). We make dietary choices every day, which affects our longevity. Thus, we are interested in finding how the food choices of U.S. households agree with the recommended number of servings to be eaten per day from each dietary food group. We will study these findings across different regions of the country (Northeast, Midwest, South, West) and this, in turn, will be compared with U.S. regional mortality rates.
+According to the  Journal of the American Medical Association, the leading cause of death in the United States in recent years is linked to unhealthful dietary factors (i.e. diabetes, cancer, etc). We make dietary choices every day, which affects our longevity. Thus, we are interested in finding how the food choices of U.S. households agree with the recommended number of servings to be eaten per day from each dietary food group. We will study these findings across different regions of the country (Northeast, Midwest, South, West) and this, in turn, will be compared with U.S. regional mortality rates. Therefore, the main research question of this report is "Is there a significant correlation between average food group proportion within household meals and mortality rates by U.S. region?"
+
+## Methods (data (sources, gathering steps))
+
+## Results (e.g.  graphs, exploratory analysis)
