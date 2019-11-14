@@ -1,10 +1,16 @@
 ---
-title: "SURVMETH 727 Term Project"
+title: "Food For Thought"
+subtitle: 'SURVMETH 727 Term Project'
 author: "Rebecca Oh, Alexa Zmich"
-date: "10/4/2019"
+date: "December 2019"
 output: pdf_document
 ---
 
-```{r}
-#just testing a commit
+## Setup
+```{r message=FALSE, warning=FALSE}
+
 ```
+
+## Introduction
+
+According to the  Journal of the American Medical Association, the leading cause of death in the United States in recent years is linked to unhealthful dietary factors (i.e. diabetes, cancer, etc). We make dietary choices every day, which affects our longevity. Thus, we are interested in finding how the food choices of U.S. households agree with the recommended number of servings to be eaten per day from each dietary food group. We will study these findings across different regions of the country (Northeast, Midwest, South, West) and this, in turn, will be compared with U.S. regional mortality rates.
