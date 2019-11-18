@@ -17,4 +17,10 @@ According to the  Journal of the American Medical Association, the leading cause
 
 ## Methods (data (sources, gathering steps))
 
+First, we will store Yelp's API key as an object, and we will use this object in the following API queries. 
+
+```{r}
+yelp_api <- PQL5AXms_2Yr6szyGBy2V6yH1sdeFS1g5S3od1WZxFKAD3IK0DEHC0mt1B8atTzO5mspVGcqxvA9gbAb_3u3_u07umTpSr0_YTdcTH9B4sP1UEXrvn713CzqPhzTXXYx
+```
+
 ## Results (e.g.  graphs, exploratory analysis)
