@@ -34,11 +34,15 @@ token <- content(res)$access_token
 
 #search url and collect data
 yelp <- "https://api.yelp.com"
-term <- "restaurants"
+term <- "food"
 location <- "MI"
 categories <- NULL
+limit <- 50
+radius <- 8800
 url <- modify_url(yelp, path = c("v3", "businesses", "search"),
-                  query = list(term = term, location = location))
+                  query = list(term = term, location = location, 
+                               limit = limit,
+                               radius = radius))
 res <- GET(url, add_headers('Authorization' = paste("bearer", client_secret)))
 
 results <- content(res)
@@ -47,7 +51,8 @@ results <- content(res)
 yelp_httr_parse <- function(x) {
 
   parse_list <- list(id = x$id, 
-                     name = x$name,  
+                     name = x$name, 
+                     categories = x$categories, 
                      rating = x$rating, 
                      review_count = x$review_count, 
                      latitude = x$coordinates$latitude, 
@@ -59,8 +64,9 @@ yelp_httr_parse <- function(x) {
   
   parse_list <- lapply(parse_list, FUN = function(x) ifelse(is.null(x), "", x))
   
-  df <- data_frame(id = parse_list$id,
-                   name = parse_list$name,  
+  df <- data_frame(id=parse_list$id,
+                   name=parse_list$name, 
+                   categories = parse_list$categories, 
                    rating = parse_list$rating, 
                    review_count = parse_list$review_count, 
                    latitude=parse_list$latitude, 
