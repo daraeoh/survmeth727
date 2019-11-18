@@ -8,7 +8,8 @@ output: pdf_document
 
 ## Setup
 ```{r message=FALSE, warning=FALSE}
-
+library(tidyverse)
+library(httr)
 ```
 
 ## Introduction
@@ -20,7 +21,16 @@ According to the  Journal of the American Medical Association, the leading cause
 First, we will store Yelp's API key as an object, and we will use this object in the following API queries. 
 
 ```{r}
-yelp_api <- PQL5AXms_2Yr6szyGBy2V6yH1sdeFS1g5S3od1WZxFKAD3IK0DEHC0mt1B8atTzO5mspVGcqxvA9gbAb_3u3_u07umTpSr0_YTdcTH9B4sP1UEXrvn713CzqPhzTXXYx
+#create a token for use with API request
+client_id <- "tuUnFmtQQZAX7YHwwbdz6g"
+client_secret <- "PQL5AXms_2Yr6szyGBy2V6yH1sdeFS1g5S3od1WZxFKAD3IK0DEHC0mt1B8atTzO5mspVGcqxvA9gbAb_3u3_u07umTpSr0_YTdcTH9B4sP1UEXrvn713CzqPhzTXXYx"
+
+res <- POST("https://api.yelp.com/oauth2/token",
+            body = list(grant_type = "client_credentials",
+                        client_id = client_id,
+                        client_secret = client_secret))
+
+token <- content(res)$access_token
 ```
 
 ## Results (e.g.  graphs, exploratory analysis)
