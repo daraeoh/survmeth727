@@ -48,89 +48,89 @@ token <- content(res)$access_token
 
 ```{r}
 #search url and collect data per county
-yelp <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #wayne
-yelp2 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #oakland
-yelp3 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #macomb
-yelp4 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #kent
-yelp5 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #genesee
+yelp <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=detroit+MI" #wayne
+yelp2 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=troy+MI" #oakland
+yelp3 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=warren+MI" #macomb
+yelp4 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=grand+rapids+MI" #kent
+yelp5 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=flint+MI" #genesee
 yelp6 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=ann+arbor+MI" #washtenaw
-yelp7 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #ingham
-yelp8 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #ottawa
-yelp9 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #kalamazoo
-yelp10 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #livingston
-yelp11 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #saginaw
-yelp12 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #muskegon
-yelp13 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #st. clair
-yelp14 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #jackson
-yelp15 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #berrien
-yelp16 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #monroe
-yelp17 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #calhoun
-yelp18 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #allegan
-yelp19 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #eaton
-yelp20 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #bay
-yelp21 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #lenawee
-yelp22 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #grand traverse
-yelp23 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #lapeer
-yelp24 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #midland
-yelp25 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #clinton
-yelp26 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #van buren
-yelp27 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #isabella
-yelp28 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #shiawassee
-yelp29 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #marquette
-yelp30 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #ionia
-yelp31 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #montcalm
-yelp32 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #barry
-yelp33 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #st. joseph
-yelp34 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #tuscola
-yelp35 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #cass
-yelp36 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #newaygo
-yelp37 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #hillsdale
-yelp38 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #branch
-yelp39 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #mecosta
-yelp40 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #sanilac
-yelp41 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #gratiot
-yelp42 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #chippewa
-yelp43 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #houghton
-yelp44 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #delta
-yelp45 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #wexford
-yelp46 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #emmet
-yelp47 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #huron
-yelp48 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #clare
-yelp49 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #mason
-yelp50 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #alpena
-yelp51 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #oceana
-yelp52 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #charlevoix
-yelp53 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #cheboygan
-yelp54 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #dickinson
-yelp55 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #gladwin
-yelp56 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #iosco
-yelp57 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #otsego
-yelp58 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #manistee
-yelp59 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #roscommon
-yelp60 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #antrim
-yelp61 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #osceola
-yelp62 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #menominee
-yelp63 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #leelanau
-yelp64 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #ogemaw
-yelp65 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #kalkaska
-yelp66 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #benzie
-yelp67 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #missaukee
-yelp68 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #gogebic
-yelp69 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #arenac
-yelp70 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #crawford
-yelp71 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #presque isle
-yelp72 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #lake
-yelp73 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #iron
-yelp74 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #mackinac
-yelp75 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #alcona
-yelp76 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #montmorency
-yelp77 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #alger
-yelp78 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #baraga
-yelp79 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #oscoda
-yelp80 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #schoolcraft
-yelp81 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #luce
-yelp82 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #ontonagon
-yelp83 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #keweenaw
+yelp7 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=lansing+MI" #ingham
+yelp8 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=allendale+MI" #ottawa
+yelp9 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=kalamazoo+MI" #kalamazoo
+yelp10 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=howell+MI" #livingston
+yelp11 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=saginaw+MI" #saginaw
+yelp12 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=muskegon+MI" #muskegon
+yelp13 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=port+huron+MI" #st. clair
+yelp14 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=jackson+MI" #jackson
+yelp15 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=niles+MI" #berrien
+yelp16 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=monroe+MI" #monroe
+yelp17 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=battle+creek+MI" #calhoun
+yelp18 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=holland+MI" #allegan
+yelp19 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=charlotte+MI" #eaton
+yelp20 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=bay+city+MI" #bay
+yelp21 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=adrian+MI" #lenawee
+yelp22 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=traverse+city+MI" #grand traverse
+yelp23 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=lapeer+MI" #lapeer
+yelp24 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=midland+MI" #midland
+yelp25 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=saint+johns+MI" #clinton
+yelp26 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=south+haven+MI" #van buren
+yelp27 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=mount+pleasant+MI" #isabella
+yelp28 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=owosso+MI" #shiawassee
+yelp29 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=marquette+MI" #marquette
+yelp30 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=ionia+MI" #ionia
+yelp31 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=greenville+MI" #montcalm
+yelp32 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=hastings+MI" #barry
+yelp33 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=sturgis+MI" #st. joseph
+yelp34 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=caro+MI" #tuscola
+yelp35 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=dowagiac+MI" #cass
+yelp36 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=fremont+MI" #newaygo
+yelp37 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=hillsdale+MI" #hillsdale
+yelp38 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=coldwater+MI" #branch
+yelp39 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=big+rapids+MI" #mecosta
+yelp40 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=sandusky+MI" #sanilac
+yelp41 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=alma+MI" #gratiot
+yelp42 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=sault+ste+marie+MI" #chippewa
+yelp43 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=hancock+MI" #houghton
+yelp44 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=escanaba+MI" #delta
+yelp45 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=cadillac+MI" #wexford
+yelp46 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=petosky+MI" #emmet
+yelp47 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=bad+axe+MI" #huron
+yelp48 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=clare+MI" #clare
+yelp49 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=ludington+MI" #mason
+yelp50 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=alpena+MI" #alpena
+yelp51 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=hart+MI" #oceana
+yelp52 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=boyne+city+MI" #charlevoix
+yelp53 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=cheboygan+MI" #cheboygan
+yelp54 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=iron+mountain+MI" #dickinson
+yelp55 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=gladwin+MI" #gladwin
+yelp56 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=east+tawas+MI" #iosco
+yelp57 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=gaylord+MI" #otsego
+yelp58 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=manistee+MI" #manistee
+yelp59 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=roscommon+MI" #roscommon
+yelp60 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=elk+rapids+MI" #antrim
+yelp61 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=reed+city+MI" #osceola
+yelp62 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=menominee+MI" #menominee
+yelp63 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=greilickville+MI" #leelanau
+yelp64 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=west+branch+MI" #ogemaw
+yelp65 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=kalkaska+MI" #kalkaska
+yelp66 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=frankfort+MI" #benzie
+yelp67 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=lake+city+MI" #missaukee
+yelp68 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=ironwood+MI" #gogebic
+yelp69 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=standish+MI" #arenac
+yelp70 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=grayling+MI" #crawford
+yelp71 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=rogers+city+MI" #presque isle
+yelp72 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=baldwin+MI" #lake
+yelp73 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=iron+river+MI" #iron
+yelp74 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=st+ignace+MI" #mackinac
+yelp75 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=harrisville+MI" #alcona
+yelp76 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=hillman+MI" #montmorency
+yelp77 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=munising+MI" #alger
+yelp78 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=baraga+MI" #baraga
+yelp79 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=big+creek+township+MI" #oscoda
+yelp80 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=manistique+MI" #schoolcraft
+yelp81 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=newberry+MI" #luce
+yelp82 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=ontonagon+MI" #ontonagon
+yelp83 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=ahmeek+MI" #keweenaw
 
 url <- modify_url(yelp, path = c("v3", "businesses", "search"))
 url2 <- modify_url(yelp2, path = c("v3", "businesses", "search"))
