@@ -38,11 +38,9 @@ term <- "food"
 location <- "MI"
 categories <- NULL
 limit <- 50
-radius <- 8800
 url <- modify_url(yelp, path = c("v3", "businesses", "search"),
-                  query = list(term = term, location = location, 
-                               limit = limit,
-                               radius = radius))
+                  query = list(term = term, location = location,
+                               limit = limit))
 res <- GET(url, add_headers('Authorization' = paste("bearer", client_secret)))
 
 results <- content(res)
@@ -81,6 +79,18 @@ yelp_httr_parse <- function(x) {
 results_list <- lapply(results$businesses, FUN = yelp_httr_parse)
 
 restaurant_data <- do.call("rbind", results_list)
+
+while(length(restaurant_data$result) > 0) {
+  # print the result
+  print(restaurant_data$results)
+  # get the next page
+  nextPage <- restaurant_data$current_page + 1
+  resp <- GET(
+    paste0(connectServer, apiPrefix, "&page_number=", nextPage),
+    authHeader
+  )
+  restaurant_data
+}
 ```
 
 ## Results (e.g.  graphs, exploratory analysis)
