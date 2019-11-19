@@ -169,7 +169,7 @@ all_restaurant <- rbind(
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;One of the columns of interest in our dataset (all_restaurant), 'categories', requires some clean-up with formatting. Thus, we will reformat that column in order to make it more understandable and clear.
 
-```{r echo=T, results='hide'}
+```{r results='hide', message=FALSE, warning=FALSE}
 #clean up data
 all_restaurant$categories <- all_restaurant$categories %>%
   str_replace_all(., "list\\(alias = ", "") %>%
