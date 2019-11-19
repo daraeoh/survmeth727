@@ -13,15 +13,16 @@ library(httr)
 library(RSocrata)
 library(tidyverse)
 library(stringr)
+library(noncensus)
 ```
 
 ## Introduction
 
-According to the  Journal of the American Medical Association, the leading cause of death in the United States in recent years is linked to unhealthful dietary factors (i.e. diabetes, cancer, etc). We make dietary choices every day, which affects our longevity. Thus, we are interested in finding how the food choices of U.S. households agree with the recommended number of servings to be eaten per day from each dietary food group. We will study these findings across different regions of the country (Northeast, Midwest, South, West) and this, in turn, will be compared with U.S. regional mortality rates. Therefore, the main research question of this report is "Is there a significant correlation between average food group proportion within household meals and mortality rates by U.S. region?"
+Rising obesity rates in the United States have become a large concern, as obesity is now the leading preventable cause of death worldwide and is associated with many other causes of death. The dietary choices we make every day affect the potential of developing obesity, including the types of restaurants we choose to eat at. Thus, we are interested in seeing the possible effect these restaurants can have on our health, leading to our research question: “Is there a correlation between the main restaurant cuisines and obesity rates within each Michigan county?”
 
 ## Methods (data (sources, gathering steps))
 
-First, we will store Yelp's API key as an object, and we will use this object in the following API queries and to ultimately get our dataset.
+In order to answer our main research question, we will first need to gather data from Yelp. We have chosen Yelp our data gathering source, as it stores information regarding restaurant name, cuisine type, and location, which we will later use to test for correlation against obesity. We will store Yelp's API key as an object, and we will use this object in the following API queries to ultimately form our dataset.
 
 ```{r}
 #create a token for use with API request
@@ -84,7 +85,7 @@ results_list <- lapply(results$businesses, FUN = yelp_httr_parse)
 restaurant_data <- do.call("rbind", results_list)
 ```
 
-The column of interest in our data from Yelp, 'categories', required some clean-up with formatting. Thus, we have reformatted that column in order to make it more understandable and clear.
+The column of interest in our data from Yelp (restaurant_data), 'categories', requires some clean-up with formatting. Thus, we will reformat that column in order to make it more understandable and clear.
 
 ```{r}
 #clean up data
@@ -124,5 +125,12 @@ restaurant_data$categories <- restaurant_data$categories %>%
   str_replace_all(., "delis", "") %>%
   str_replace_all(., "caribbean", "")
 ```
+
+The data from Yelp provides us information regarding location (city, state, longtitude, latitude). However, we are interested in studying counties within the state of Michigan. Thus, we will create an object that will map the restaurant's location to its associated county.
+
+```{r}
+
+```
+
 
 ## Results (e.g.  graphs, exploratory analysis)
