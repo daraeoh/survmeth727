@@ -166,7 +166,7 @@ all_restaurant <- rbind(
   restaurant_data12)
 ```
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The column of interest in our data from Yelp (restaurant_data), 'categories', requires some clean-up with formatting. Thus, we will reformat that column in order to make it more understandable and clear.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;One of the columns of interest in our dataset (all_restaurant), 'categories', requires some clean-up with formatting. Thus, we will reformat that column in order to make it more understandable and clear.
 
 ```{r}
 #clean up data
