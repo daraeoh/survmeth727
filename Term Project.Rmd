@@ -39,17 +39,49 @@ res <- POST("https://api.yelp.com/oauth2/token",
 token <- content(res)$access_token
 
 #search url and collect data
-yelp <- "https://api.yelp.com"
-term <- "food"
-location <- "MI"
-categories <- NULL
-limit <- 50
+yelp <- "https://api.yelp.com/v3/businesses/search/?limit=50&offset=0&sort=0&term=food&location=MI"
+yelp2 <- "https://api.yelp.com/v3/businesses/search/?limit=50&offset=50&sort=0&term=food&location=MI"
+yelp3 <- "https://api.yelp.com/v3/businesses/search/?limit=50&offset=100&sort=0&term=food&location=MI"
+yelp4 <- "https://api.yelp.com/v3/businesses/search/?limit=50&offset=150&sort=0&term=food&location=MI"
+yelp5 <- "https://api.yelp.com/v3/businesses/search/?limit=50&offset=200&sort=0&term=food&location=MI"
+yelp6 <- "https://api.yelp.com/v3/businesses/search/?limit=50&offset=250&sort=0&term=food&location=MI"
+yelp7 <- "https://api.yelp.com/v3/businesses/search/?limit=50&offset=300&sort=0&term=food&location=MI"
+yelp8 <- "https://api.yelp.com/v3/businesses/search/?limit=50&offset=350&sort=0&term=food&location=MI"
+
 url <- modify_url(yelp, path = c("v3", "businesses", "search"),
-                  query = list(term = term, location = location,
-                               limit = limit))
+                  query = list(term = term, location = location, limit = limit))
+url2 <- modify_url(yelp2, path = c("v3", "businesses", "search"),
+                  query = list(term = term, location = location, limit = limit))
+url3 <- modify_url(yelp3, path = c("v3", "businesses", "search"),
+                  query = list(term = term, location = location, limit = limit))
+url4 <- modify_url(yelp4, path = c("v3", "businesses", "search"),
+                  query = list(term = term, location = location, limit = limit))
+url5 <- modify_url(yelp5, path = c("v3", "businesses", "search"),
+                  query = list(term = term, location = location, limit = limit))
+url6 <- modify_url(yelp6, path = c("v3", "businesses", "search"),
+                  query = list(term = term, location = location, limit = limit))
+url7 <- modify_url(yelp7, path = c("v3", "businesses", "search"),
+                  query = list(term = term, location = location, limit = limit))
+url8 <- modify_url(yelp8, path = c("v3", "businesses", "search"),
+                  query = list(term = term, location = location, limit = limit))
+
 res <- GET(url, add_headers('Authorization' = paste("bearer", client_secret)))
+res2 <- GET(url2, add_headers('Authorization' = paste("bearer", client_secret)))
+res3 <- GET(url3, add_headers('Authorization' = paste("bearer", client_secret)))
+res4 <- GET(url4, add_headers('Authorization' = paste("bearer", client_secret)))
+res5 <- GET(url5, add_headers('Authorization' = paste("bearer", client_secret)))
+res6 <- GET(url6, add_headers('Authorization' = paste("bearer", client_secret)))
+res7 <- GET(url7, add_headers('Authorization' = paste("bearer", client_secret)))
+res8 <- GET(url8, add_headers('Authorization' = paste("bearer", client_secret)))
 
 results <- content(res)
+results2 <- content(res2)
+results3 <- content(res3)
+results4 <- content(res4)
+results5 <- content(res5)
+results6 <- content(res6)
+results7 <- content(res7)
+results8 <- content(res8)
 
 #parse data
 yelp_httr_parse <- function(x) {
@@ -83,15 +115,39 @@ yelp_httr_parse <- function(x) {
 }
 
 results_list <- lapply(results$businesses, FUN = yelp_httr_parse)
+results_list2 <- lapply(results2$businesses, FUN = yelp_httr_parse)
+results_list3 <- lapply(results3$businesses, FUN = yelp_httr_parse)
+results_list4 <- lapply(results4$businesses, FUN = yelp_httr_parse)
+results_list5 <- lapply(results5$businesses, FUN = yelp_httr_parse)
+results_list6 <- lapply(results6$businesses, FUN = yelp_httr_parse)
+results_list7 <- lapply(results7$businesses, FUN = yelp_httr_parse)
+results_list8 <- lapply(results8$businesses, FUN = yelp_httr_parse)
 
 restaurant_data <- do.call("rbind", results_list)
+restaurant_data2 <- do.call("rbind", results_list2)
+restaurant_data3 <- do.call("rbind", results_list3)
+restaurant_data4 <- do.call("rbind", results_list4)
+restaurant_data5 <- do.call("rbind", results_list5)
+restaurant_data6 <- do.call("rbind", results_list6)
+restaurant_data7 <- do.call("rbind", results_list7)
+restaurant_data8 <- do.call("rbind", results_list8)
+
+all_restaurant <- rbind(
+  restaurant_data, 
+  restaurant_data2, 
+  restaurant_data3,
+  restaurant_data4,
+  restaurant_data5,
+  restaurant_data6,
+  restaurant_data7,
+  restaurant_data8)
 ```
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The column of interest in our data from Yelp (restaurant_data), 'categories', requires some clean-up with formatting. Thus, we will reformat that column in order to make it more understandable and clear.
 
 ```{r}
 #clean up data
-restaurant_data$categories <- restaurant_data$categories %>%
+all_restaurant$categories <- all_restaurant$categories %>%
   str_replace_all(., "list\\(alias = ", "") %>%
   str_replace_all(., "\\)", "") %>%
   str_replace_all(., "\\(New", "- New") %>%
@@ -125,11 +181,80 @@ restaurant_data$categories <- restaurant_data$categories %>%
   str_replace_all(., "hotdog", "") %>%
   str_replace_all(., "diners", "") %>%
   str_replace_all(., "delis", "") %>%
-  str_replace_all(., "caribbean", "")
+  str_replace_all(., "caribbean", "") %>%
+  str_replace_all(., "musicvenues", "") %>%
+  str_replace_all(., "soulfood", "") %>%
+  str_replace_all(., "chickenshop", "") %>%
+  str_replace_all(., "bagels", "") %>%
+  str_replace_all(., "italian", "") %>%
+  str_replace_all(., "vietnamese", "") %>%
+  str_replace_all(., "sandwiches", "") %>%
+  str_replace_all(., "honduran", "") %>%
+  str_replace_all(., "lebanese", "") %>%
+  str_replace_all(., "bbq", "") %>%
+  str_replace_all(., "chicken_wings", "") %>%
+  str_replace_all(., "modern_european", "") %>%
+  str_replace_all(., "chinese", "") %>%
+  str_replace_all(., "breweries", "") %>%
+  str_replace_all(., "vegan", "") %>%
+  str_replace_all(., "salvadoran", "") %>%
+  str_replace_all(., "venezuelan", "") %>%
+  str_replace_all(., "sushi", "") %>%
+  str_replace_all(., "filipino", "") %>%
+  str_replace_all(., "icecream", "") %>%
+  str_replace_all(., "halal", "") %>%
+  str_replace_all(., "juice", "") %>%
+  str_replace_all(., "sFast Food", "Fast Food") %>%
+  str_replace_all(., "bakeries", "") %>%
+  str_replace_all(., "poutineries", "") %>%
+  str_replace_all(., "newcanadian", "") %>%
+  str_replace_all(., "cocktail", "") %>%
+  str_replace_all(., "brazilian", "") %>%
+  str_replace_all(., "seafood", "") %>%
+  str_replace_all(., "mideastern", "") %>%
+  str_replace_all(., "polish", "") %>%
+  str_replace_all(., "creperies", "") %>%
+  str_replace_all(., "coffee", "") %>%
+  str_replace_all(., "smokehouse", "") %>%
+  str_replace_all(., "grocery", "") %>%
+  str_replace_all(., "peruvian", "") %>%
+  str_replace_all(., "tapas", "") %>%
+  str_replace_all(., "senegalese", "") %>%
+  str_replace_all(., "divee", "") %>%
+  str_replace_all(., "dominican", "") %>%
+  str_replace_all(., "fishnchips", "") %>%
+  str_replace_all(., "japanese", "") %>%
+  str_replace_all(., "german", "") %>%
+  str_replace_all(., "food_court", "") %>%
+  str_replace_all(., "cafes", "") %>%
+  str_replace_all(., "puertorican", "") %>%
+  str_replace_all(., "dimsum", "") %>%
+  str_replace_all(., "meats", "") %>%
+  str_replace_all(., "greek", "") %>%
+  str_replace_all(., "fooddeliveryservices", "") %>%
+  str_replace_all(., "moroccan", "") %>%
+  str_replace_all(., "vegetarian", "") %>%
+  str_replace_all(., "gourmet", "") %>%
+  str_replace_all(., "streetvendors", "") %>%
+  str_replace_all(., "salad", "") %>%
+  str_replace_all(., "indpak", "") %>%
+  str_replace_all(., "desserts", "") %>%
+  str_replace_all(., "steak", "") %>%
+  str_replace_all(., "seafoodmarkets", "") %>%
+  str_replace_all(., "latin", "") %>%
+  str_replace_all(., "tapasmallplates", "") %>%
+  str_replace_all(., "mallplates", "") %>%
+  str_replace_all(., "farmersmarket", "") %>%
+  str_replace_all(., "british", "") %>%
+  str_replace_all(., "korean", "") %>%
+  str_replace_all(., "ukrainian", "") %>%
+  str_replace_all(., "beer_and_wine", "") %>%
+  str_replace_all(., "massage_therapy", "") %>%
+  str_replace_all(., "cheeses", "") %>%
+  str_replace_all(., "markets", "") 
 ```
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The data from Yelp provides us information regarding location (city, state, longtitude, latitude). However, we are interested in studying counties within the state of Michigan. Thus, we will create an object that will map the restaurant's location to its associated county.
-
 ```{r}
 
 ```
