@@ -12,6 +12,7 @@ geometry: margin=0.75in
 
 ## Setup
 ```{r message=FALSE, warning=FALSE}
+library(yelpr)
 library(knitr)
 library(markdown)
 library(tidyverse)
@@ -24,11 +25,11 @@ library(noncensus)
 
 ## Introduction
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Rising obesity rates in the United States have become a large concern, as obesity is now the leading preventable cause of death worldwide and is associated with many other causes of death. The dietary choices we make every day affect the potential of developing obesity, including the types of restaurants we choose to eat at. Thus, we are interested in seeing the possible effect these restaurants can have on our health, leading to our research question: “Is there a correlation between the main restaurant cuisines and obesity rates within each Michigan county?”
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Rising obesity rates in the United States have become a large concern, as obesity is now the leading preventable cause of death worldwide and is associated with many other causes of death. The dietary choices we make every day affect the potential of developing obesity, including the types of food establishments we choose to eat at. Thus, we are interested in seeing the possible effect these food establishments can have on our health, leading to our research question: “Is there a correlation between the main cuisines of food establishments and obesity rates within each Michigan county?”
 
 ## Methods (data (sources, gathering steps))
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In order to answer our main research question, we will first need to gather data from Yelp. We have chosen Yelp as our data gathering source, as it stores information regarding restaurant name, cuisine type, and location, which we will later use to test for correlation against obesity. We will store Yelp's API key as an object, and we will use this object in the following API queries to ultimately form our dataset. The Yelp API only returns 50 observations, so we will offset in intervals of 50 to get multiple unique datasets of 50 observations each. We will then merge these different datasets to obtain our dataset of [number] observations, which we will use for our main analysis.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In order to answer our main research question, we will first need Yelp API access. We have chosen Yelp as our data gathering source, as it stores information regarding restaurant name, cuisine type, and location, which we will later use to test for correlation against obesity. We will store Yelp's API key as an object, and we will use this object in the following API queries to ultimately form our dataset.
 
 ```{r}
 #create a token for use with API request
@@ -41,20 +42,95 @@ res <- POST("https://api.yelp.com/oauth2/token",
                         client_secret = client_secret))
 
 token <- content(res)$access_token
+```
 
-#search url and collect data
-yelp <- "https://api.yelp.com/v3/businesses/search/?limit=50&offset=0&sort=0&term=food&location=MI"
-yelp2 <- "https://api.yelp.com/v3/businesses/search/?limit=50&offset=50&sort=0&term=food&location=MI"
-yelp3 <- "https://api.yelp.com/v3/businesses/search/?limit=50&offset=100&sort=0&term=food&location=MI"
-yelp4 <- "https://api.yelp.com/v3/businesses/search/?limit=50&offset=150&sort=0&term=food&location=MI"
-yelp5 <- "https://api.yelp.com/v3/businesses/search/?limit=50&offset=200&sort=0&term=food&location=MI"
-yelp6 <- "https://api.yelp.com/v3/businesses/search/?limit=50&offset=250&sort=0&term=food&location=MI"
-yelp7 <- "https://api.yelp.com/v3/businesses/search/?limit=50&offset=300&sort=0&term=food&location=MI"
-yelp8 <- "https://api.yelp.com/v3/businesses/search/?limit=50&offset=350&sort=0&term=food&location=MI"
-yelp9 <- "https://api.yelp.com/v3/businesses/search/?limit=50&offset=400&sort=0&term=food&location=MI"
-yelp10 <- "https://api.yelp.com/v3/businesses/search/?limit=50&offset=450&sort=0&term=food&location=MI"
-yelp11 <- "https://api.yelp.com/v3/businesses/search/?limit=50&offset=500&sort=0&term=food&location=MI"
-yelp12 <- "https://api.yelp.com/v3/businesses/search/?limit=50&offset=550&sort=0&term=food&location=MI"
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In terms of data gathering, we are interested in collecting the top 20 most popular food establishments in the most populated location of each of the 83 counties (indicated in the commented code) in the state of Michigan. We will search with "food" as the term of interest and the "location" as the most populated area within the specific county.
+
+```{r}
+#search url and collect data per county
+yelp <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #wayne
+yelp2 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #oakland
+yelp3 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #macomb
+yelp4 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #kent
+yelp5 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #genesee
+yelp6 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=ann+arbor+MI" #washtenaw
+yelp7 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #ingham
+yelp8 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #ottawa
+yelp9 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #kalamazoo
+yelp10 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #livingston
+yelp11 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #saginaw
+yelp12 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #muskegon
+yelp13 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #st. clair
+yelp14 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #jackson
+yelp15 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #berrien
+yelp16 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #monroe
+yelp17 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #calhoun
+yelp18 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #allegan
+yelp19 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #eaton
+yelp20 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #bay
+yelp21 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #lenawee
+yelp22 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #grand traverse
+yelp23 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #lapeer
+yelp24 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #midland
+yelp25 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #clinton
+yelp26 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #van buren
+yelp27 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #isabella
+yelp28 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #shiawassee
+yelp29 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #marquette
+yelp30 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #ionia
+yelp31 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #montcalm
+yelp32 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #barry
+yelp33 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #st. joseph
+yelp34 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #tuscola
+yelp35 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #cass
+yelp36 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #newaygo
+yelp37 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #hillsdale
+yelp38 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #branch
+yelp39 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #mecosta
+yelp40 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #sanilac
+yelp41 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #gratiot
+yelp42 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #chippewa
+yelp43 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #houghton
+yelp44 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #delta
+yelp45 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #wexford
+yelp46 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #emmet
+yelp47 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #huron
+yelp48 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #clare
+yelp49 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #mason
+yelp50 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #alpena
+yelp51 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #oceana
+yelp52 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #charlevoix
+yelp53 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #cheboygan
+yelp54 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #dickinson
+yelp55 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #gladwin
+yelp56 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #iosco
+yelp57 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #otsego
+yelp58 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #manistee
+yelp59 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #roscommon
+yelp60 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #antrim
+yelp61 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #osceola
+yelp62 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #menominee
+yelp63 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #leelanau
+yelp64 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #ogemaw
+yelp65 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #kalkaska
+yelp66 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #benzie
+yelp67 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #missaukee
+yelp68 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #gogebic
+yelp69 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #arenac
+yelp70 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #crawford
+yelp71 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #presque isle
+yelp72 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #lake
+yelp73 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #iron
+yelp74 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #mackinac
+yelp75 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #alcona
+yelp76 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #montmorency
+yelp77 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #alger
+yelp78 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #baraga
+yelp79 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #oscoda
+yelp80 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #schoolcraft
+yelp81 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #luce
+yelp82 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #ontonagon
+yelp83 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=MI" #keweenaw
 
 url <- modify_url(yelp, path = c("v3", "businesses", "search"))
 url2 <- modify_url(yelp2, path = c("v3", "businesses", "search"))
@@ -68,6 +144,77 @@ url9 <- modify_url(yelp9, path = c("v3", "businesses", "search"))
 url10 <- modify_url(yelp10, path = c("v3", "businesses", "search"))
 url11 <- modify_url(yelp11, path = c("v3", "businesses", "search"))
 url12 <- modify_url(yelp12, path = c("v3", "businesses", "search"))
+url13 <- modify_url(yelp13, path = c("v3", "businesses", "search"))
+url14 <- modify_url(yelp14, path = c("v3", "businesses", "search"))
+url15 <- modify_url(yelp15, path = c("v3", "businesses", "search"))
+url16 <- modify_url(yelp16, path = c("v3", "businesses", "search"))
+url17 <- modify_url(yelp17, path = c("v3", "businesses", "search"))
+url18 <- modify_url(yelp18, path = c("v3", "businesses", "search"))
+url19 <- modify_url(yelp19, path = c("v3", "businesses", "search"))
+url20 <- modify_url(yelp20, path = c("v3", "businesses", "search"))
+url21 <- modify_url(yelp21, path = c("v3", "businesses", "search"))
+url22 <- modify_url(yelp22, path = c("v3", "businesses", "search"))
+url23 <- modify_url(yelp23, path = c("v3", "businesses", "search"))
+url24 <- modify_url(yelp24, path = c("v3", "businesses", "search"))
+url25 <- modify_url(yelp25, path = c("v3", "businesses", "search"))
+url26 <- modify_url(yelp26, path = c("v3", "businesses", "search"))
+url27 <- modify_url(yelp27, path = c("v3", "businesses", "search"))
+url28 <- modify_url(yelp28, path = c("v3", "businesses", "search"))
+url29 <- modify_url(yelp29, path = c("v3", "businesses", "search"))
+url30 <- modify_url(yelp30, path = c("v3", "businesses", "search"))
+url31 <- modify_url(yelp31, path = c("v3", "businesses", "search"))
+url32 <- modify_url(yelp32, path = c("v3", "businesses", "search"))
+url33 <- modify_url(yelp33, path = c("v3", "businesses", "search"))
+url34 <- modify_url(yelp34, path = c("v3", "businesses", "search"))
+url35 <- modify_url(yelp35, path = c("v3", "businesses", "search"))
+url36 <- modify_url(yelp36, path = c("v3", "businesses", "search"))
+url37 <- modify_url(yelp37, path = c("v3", "businesses", "search"))
+url38 <- modify_url(yelp38, path = c("v3", "businesses", "search"))
+url39 <- modify_url(yelp39, path = c("v3", "businesses", "search"))
+url40 <- modify_url(yelp40, path = c("v3", "businesses", "search"))
+url41 <- modify_url(yelp41, path = c("v3", "businesses", "search"))
+url42 <- modify_url(yelp42, path = c("v3", "businesses", "search"))
+url43 <- modify_url(yelp43, path = c("v3", "businesses", "search"))
+url44 <- modify_url(yelp44, path = c("v3", "businesses", "search"))
+url45 <- modify_url(yelp45, path = c("v3", "businesses", "search"))
+url46 <- modify_url(yelp46, path = c("v3", "businesses", "search"))
+url47 <- modify_url(yelp47, path = c("v3", "businesses", "search"))
+url48 <- modify_url(yelp48, path = c("v3", "businesses", "search"))
+url49 <- modify_url(yelp49, path = c("v3", "businesses", "search"))
+url50 <- modify_url(yelp50, path = c("v3", "businesses", "search"))
+url51 <- modify_url(yelp51, path = c("v3", "businesses", "search"))
+url52 <- modify_url(yelp52, path = c("v3", "businesses", "search"))
+url53 <- modify_url(yelp53, path = c("v3", "businesses", "search"))
+url54 <- modify_url(yelp54, path = c("v3", "businesses", "search"))
+url55 <- modify_url(yelp55, path = c("v3", "businesses", "search"))
+url56 <- modify_url(yelp56, path = c("v3", "businesses", "search"))
+url57 <- modify_url(yelp57, path = c("v3", "businesses", "search"))
+url58 <- modify_url(yelp58, path = c("v3", "businesses", "search"))
+url59 <- modify_url(yelp59, path = c("v3", "businesses", "search"))
+url60 <- modify_url(yelp60, path = c("v3", "businesses", "search"))
+url61 <- modify_url(yelp61, path = c("v3", "businesses", "search"))
+url62 <- modify_url(yelp62, path = c("v3", "businesses", "search"))
+url63 <- modify_url(yelp63, path = c("v3", "businesses", "search"))
+url64 <- modify_url(yelp64, path = c("v3", "businesses", "search"))
+url65 <- modify_url(yelp65, path = c("v3", "businesses", "search"))
+url66 <- modify_url(yelp66, path = c("v3", "businesses", "search"))
+url67 <- modify_url(yelp67, path = c("v3", "businesses", "search"))
+url68 <- modify_url(yelp68, path = c("v3", "businesses", "search"))
+url69 <- modify_url(yelp69, path = c("v3", "businesses", "search"))
+url70 <- modify_url(yelp70, path = c("v3", "businesses", "search"))
+url71 <- modify_url(yelp71, path = c("v3", "businesses", "search"))
+url72 <- modify_url(yelp72, path = c("v3", "businesses", "search"))
+url73 <- modify_url(yelp73, path = c("v3", "businesses", "search"))
+url74 <- modify_url(yelp74, path = c("v3", "businesses", "search"))
+url75 <- modify_url(yelp75, path = c("v3", "businesses", "search"))
+url76 <- modify_url(yelp76, path = c("v3", "businesses", "search"))
+url77 <- modify_url(yelp77, path = c("v3", "businesses", "search"))
+url78 <- modify_url(yelp78, path = c("v3", "businesses", "search"))
+url79 <- modify_url(yelp79, path = c("v3", "businesses", "search"))
+url80 <- modify_url(yelp80, path = c("v3", "businesses", "search"))
+url81 <- modify_url(yelp81, path = c("v3", "businesses", "search"))
+url82 <- modify_url(yelp82, path = c("v3", "businesses", "search"))
+url83 <- modify_url(yelp83, path = c("v3", "businesses", "search"))
 
 res <- GET(url, add_headers('Authorization' = paste("bearer", client_secret)))
 res2 <- GET(url2, add_headers('Authorization' = paste("bearer", client_secret)))
@@ -81,6 +228,77 @@ res9 <- GET(url9, add_headers('Authorization' = paste("bearer", client_secret)))
 res10 <- GET(url10, add_headers('Authorization' = paste("bearer", client_secret)))
 res11 <- GET(url11, add_headers('Authorization' = paste("bearer", client_secret)))
 res12 <- GET(url12, add_headers('Authorization' = paste("bearer", client_secret)))
+res13 <- GET(url13, add_headers('Authorization' = paste("bearer", client_secret)))
+res14 <- GET(url14, add_headers('Authorization' = paste("bearer", client_secret)))
+res15 <- GET(url15, add_headers('Authorization' = paste("bearer", client_secret)))
+res16 <- GET(url16, add_headers('Authorization' = paste("bearer", client_secret)))
+res17 <- GET(url17, add_headers('Authorization' = paste("bearer", client_secret)))
+res18 <- GET(url18, add_headers('Authorization' = paste("bearer", client_secret)))
+res19 <- GET(url19, add_headers('Authorization' = paste("bearer", client_secret)))
+res20 <- GET(url20, add_headers('Authorization' = paste("bearer", client_secret)))
+res21 <- GET(url21, add_headers('Authorization' = paste("bearer", client_secret)))
+res22 <- GET(url22, add_headers('Authorization' = paste("bearer", client_secret)))
+res23 <- GET(url23, add_headers('Authorization' = paste("bearer", client_secret)))
+res24 <- GET(url24, add_headers('Authorization' = paste("bearer", client_secret)))
+res25 <- GET(url25, add_headers('Authorization' = paste("bearer", client_secret)))
+res26 <- GET(url26, add_headers('Authorization' = paste("bearer", client_secret)))
+res27 <- GET(url27, add_headers('Authorization' = paste("bearer", client_secret)))
+res28 <- GET(url28, add_headers('Authorization' = paste("bearer", client_secret)))
+res29 <- GET(url29, add_headers('Authorization' = paste("bearer", client_secret)))
+res30 <- GET(url30, add_headers('Authorization' = paste("bearer", client_secret)))
+res31 <- GET(url31, add_headers('Authorization' = paste("bearer", client_secret)))
+res32 <- GET(url32, add_headers('Authorization' = paste("bearer", client_secret)))
+res33 <- GET(url33, add_headers('Authorization' = paste("bearer", client_secret)))
+res34 <- GET(url34, add_headers('Authorization' = paste("bearer", client_secret)))
+res35 <- GET(url35, add_headers('Authorization' = paste("bearer", client_secret)))
+res36 <- GET(url36, add_headers('Authorization' = paste("bearer", client_secret)))
+res37 <- GET(url37, add_headers('Authorization' = paste("bearer", client_secret)))
+res38 <- GET(url38, add_headers('Authorization' = paste("bearer", client_secret)))
+res39 <- GET(url39, add_headers('Authorization' = paste("bearer", client_secret)))
+res40 <- GET(url40, add_headers('Authorization' = paste("bearer", client_secret)))
+res41 <- GET(url41, add_headers('Authorization' = paste("bearer", client_secret)))
+res42 <- GET(url42, add_headers('Authorization' = paste("bearer", client_secret)))
+res43 <- GET(url43, add_headers('Authorization' = paste("bearer", client_secret)))
+res44 <- GET(url44, add_headers('Authorization' = paste("bearer", client_secret)))
+res45 <- GET(url45, add_headers('Authorization' = paste("bearer", client_secret)))
+res46 <- GET(url46, add_headers('Authorization' = paste("bearer", client_secret)))
+res47 <- GET(url47, add_headers('Authorization' = paste("bearer", client_secret)))
+res48 <- GET(url48, add_headers('Authorization' = paste("bearer", client_secret)))
+res49 <- GET(url49, add_headers('Authorization' = paste("bearer", client_secret)))
+res50 <- GET(url50, add_headers('Authorization' = paste("bearer", client_secret)))
+res51 <- GET(url51, add_headers('Authorization' = paste("bearer", client_secret)))
+res52 <- GET(url52, add_headers('Authorization' = paste("bearer", client_secret)))
+res53 <- GET(url53, add_headers('Authorization' = paste("bearer", client_secret)))
+res54 <- GET(url54, add_headers('Authorization' = paste("bearer", client_secret)))
+res55 <- GET(url55, add_headers('Authorization' = paste("bearer", client_secret)))
+res56 <- GET(url56, add_headers('Authorization' = paste("bearer", client_secret)))
+res57 <- GET(url57, add_headers('Authorization' = paste("bearer", client_secret)))
+res58 <- GET(url58, add_headers('Authorization' = paste("bearer", client_secret)))
+res59 <- GET(url59, add_headers('Authorization' = paste("bearer", client_secret)))
+res60 <- GET(url60, add_headers('Authorization' = paste("bearer", client_secret)))
+res61 <- GET(url61, add_headers('Authorization' = paste("bearer", client_secret)))
+res62 <- GET(url62, add_headers('Authorization' = paste("bearer", client_secret)))
+res63 <- GET(url63, add_headers('Authorization' = paste("bearer", client_secret)))
+res64 <- GET(url64, add_headers('Authorization' = paste("bearer", client_secret)))
+res65 <- GET(url65, add_headers('Authorization' = paste("bearer", client_secret)))
+res66 <- GET(url66, add_headers('Authorization' = paste("bearer", client_secret)))
+res67 <- GET(url67, add_headers('Authorization' = paste("bearer", client_secret)))
+res68 <- GET(url68, add_headers('Authorization' = paste("bearer", client_secret)))
+res69 <- GET(url69, add_headers('Authorization' = paste("bearer", client_secret)))
+res70 <- GET(url70, add_headers('Authorization' = paste("bearer", client_secret)))
+res71 <- GET(url71, add_headers('Authorization' = paste("bearer", client_secret)))
+res72 <- GET(url72, add_headers('Authorization' = paste("bearer", client_secret)))
+res73 <- GET(url73, add_headers('Authorization' = paste("bearer", client_secret)))
+res74 <- GET(url74, add_headers('Authorization' = paste("bearer", client_secret)))
+res75 <- GET(url75, add_headers('Authorization' = paste("bearer", client_secret)))
+res76 <- GET(url76, add_headers('Authorization' = paste("bearer", client_secret)))
+res77 <- GET(url77, add_headers('Authorization' = paste("bearer", client_secret)))
+res78 <- GET(url78, add_headers('Authorization' = paste("bearer", client_secret)))
+res79 <- GET(url79, add_headers('Authorization' = paste("bearer", client_secret)))
+res80 <- GET(url80, add_headers('Authorization' = paste("bearer", client_secret)))
+res81 <- GET(url81, add_headers('Authorization' = paste("bearer", client_secret)))
+res82 <- GET(url82, add_headers('Authorization' = paste("bearer", client_secret)))
+res83 <- GET(url83, add_headers('Authorization' = paste("bearer", client_secret)))
 
 results <- content(res)
 results2 <- content(res2)
@@ -94,6 +312,77 @@ results9 <- content(res9)
 results10 <- content(res10)
 results11 <- content(res11)
 results12 <- content(res12)
+results13 <- content(res13)
+results14 <- content(res14)
+results15 <- content(res15)
+results16 <- content(res16)
+results17 <- content(res17)
+results18 <- content(res18)
+results19 <- content(res19)
+results20 <- content(res20)
+results21 <- content(res21)
+results22 <- content(res22)
+results23 <- content(res23)
+results24 <- content(res24)
+results25 <- content(res25)
+results26 <- content(res26)
+results27 <- content(res27)
+results28 <- content(res28)
+results29 <- content(res29)
+results30 <- content(res30)
+results31 <- content(res31)
+results32 <- content(res32)
+results33 <- content(res33)
+results34 <- content(res34)
+results35 <- content(res35)
+results36 <- content(res36)
+results37 <- content(res37)
+results38 <- content(res38)
+results39 <- content(res39)
+results40 <- content(res40)
+results41 <- content(res41)
+results42 <- content(res42)
+results43 <- content(res43)
+results44 <- content(res44)
+results45 <- content(res45)
+results46 <- content(res46)
+results47 <- content(res47)
+results48 <- content(res48)
+results49 <- content(res49)
+results50 <- content(res50)
+results51 <- content(res51)
+results52 <- content(res52)
+results53 <- content(res53)
+results54 <- content(res54)
+results55 <- content(res55)
+results56 <- content(res56)
+results57 <- content(res57)
+results58 <- content(res58)
+results59 <- content(res59)
+results60 <- content(res60)
+results61 <- content(res61)
+results62 <- content(res62)
+results63 <- content(res63)
+results64 <- content(res64)
+results65 <- content(res65)
+results66 <- content(res66)
+results67 <- content(res67)
+results68 <- content(res68)
+results69 <- content(res69)
+results70 <- content(res70)
+results71 <- content(res71)
+results72 <- content(res72)
+results73 <- content(res73)
+results74 <- content(res74)
+results75 <- content(res75)
+results76 <- content(res76)
+results77 <- content(res77)
+results78 <- content(res78)
+results79 <- content(res79)
+results80 <- content(res80)
+results81 <- content(res81)
+results82 <- content(res82)
+results83 <- content(res83)
 
 #parse data
 yelp_httr_parse <- function(x) {
@@ -138,40 +427,253 @@ results_list9 <- lapply(results9$businesses, FUN = yelp_httr_parse)
 results_list10 <- lapply(results10$businesses, FUN = yelp_httr_parse)
 results_list11 <- lapply(results11$businesses, FUN = yelp_httr_parse)
 results_list12 <- lapply(results12$businesses, FUN = yelp_httr_parse)
+results_list13 <- lapply(results13$businesses, FUN = yelp_httr_parse)
+results_list14 <- lapply(results14$businesses, FUN = yelp_httr_parse)
+results_list15 <- lapply(results15$businesses, FUN = yelp_httr_parse)
+results_list16 <- lapply(results16$businesses, FUN = yelp_httr_parse)
+results_list17 <- lapply(results17$businesses, FUN = yelp_httr_parse)
+results_list18 <- lapply(results18$businesses, FUN = yelp_httr_parse)
+results_list19 <- lapply(results19$businesses, FUN = yelp_httr_parse)
+results_list20 <- lapply(results20$businesses, FUN = yelp_httr_parse)
+results_list21 <- lapply(results21$businesses, FUN = yelp_httr_parse)
+results_list22 <- lapply(results22$businesses, FUN = yelp_httr_parse)
+results_list23 <- lapply(results23$businesses, FUN = yelp_httr_parse)
+results_list24 <- lapply(results24$businesses, FUN = yelp_httr_parse)
+results_list25 <- lapply(results25$businesses, FUN = yelp_httr_parse)
+results_list26 <- lapply(results26$businesses, FUN = yelp_httr_parse)
+results_list27 <- lapply(results27$businesses, FUN = yelp_httr_parse)
+results_list28 <- lapply(results28$businesses, FUN = yelp_httr_parse)
+results_list29 <- lapply(results29$businesses, FUN = yelp_httr_parse)
+results_list30 <- lapply(results30$businesses, FUN = yelp_httr_parse)
+results_list31 <- lapply(results31$businesses, FUN = yelp_httr_parse)
+results_list32 <- lapply(results32$businesses, FUN = yelp_httr_parse)
+results_list33 <- lapply(results33$businesses, FUN = yelp_httr_parse)
+results_list34 <- lapply(results34$businesses, FUN = yelp_httr_parse)
+results_list35 <- lapply(results35$businesses, FUN = yelp_httr_parse)
+results_list36 <- lapply(results36$businesses, FUN = yelp_httr_parse)
+results_list37 <- lapply(results37$businesses, FUN = yelp_httr_parse)
+results_list38 <- lapply(results38$businesses, FUN = yelp_httr_parse)
+results_list39 <- lapply(results39$businesses, FUN = yelp_httr_parse)
+results_list40 <- lapply(results40$businesses, FUN = yelp_httr_parse)
+results_list41 <- lapply(results41$businesses, FUN = yelp_httr_parse)
+results_list42 <- lapply(results42$businesses, FUN = yelp_httr_parse)
+results_list43 <- lapply(results43$businesses, FUN = yelp_httr_parse)
+results_list44 <- lapply(results44$businesses, FUN = yelp_httr_parse)
+results_list45 <- lapply(results45$businesses, FUN = yelp_httr_parse)
+results_list46 <- lapply(results46$businesses, FUN = yelp_httr_parse)
+results_list47 <- lapply(results47$businesses, FUN = yelp_httr_parse)
+results_list48 <- lapply(results48$businesses, FUN = yelp_httr_parse)
+results_list49 <- lapply(results49$businesses, FUN = yelp_httr_parse)
+results_list50 <- lapply(results50$businesses, FUN = yelp_httr_parse)
+results_list51 <- lapply(results51$businesses, FUN = yelp_httr_parse)
+results_list52 <- lapply(results52$businesses, FUN = yelp_httr_parse)
+results_list53 <- lapply(results53$businesses, FUN = yelp_httr_parse)
+results_list54 <- lapply(results54$businesses, FUN = yelp_httr_parse)
+results_list55 <- lapply(results55$businesses, FUN = yelp_httr_parse)
+results_list56 <- lapply(results56$businesses, FUN = yelp_httr_parse)
+results_list57 <- lapply(results57$businesses, FUN = yelp_httr_parse)
+results_list58 <- lapply(results58$businesses, FUN = yelp_httr_parse)
+results_list59 <- lapply(results59$businesses, FUN = yelp_httr_parse)
+results_list60 <- lapply(results60$businesses, FUN = yelp_httr_parse)
+results_list61 <- lapply(results61$businesses, FUN = yelp_httr_parse)
+results_list62 <- lapply(results62$businesses, FUN = yelp_httr_parse)
+results_list63 <- lapply(results63$businesses, FUN = yelp_httr_parse)
+results_list64 <- lapply(results64$businesses, FUN = yelp_httr_parse)
+results_list65 <- lapply(results65$businesses, FUN = yelp_httr_parse)
+results_list66 <- lapply(results66$businesses, FUN = yelp_httr_parse)
+results_list67 <- lapply(results67$businesses, FUN = yelp_httr_parse)
+results_list68 <- lapply(results68$businesses, FUN = yelp_httr_parse)
+results_list69 <- lapply(results69$businesses, FUN = yelp_httr_parse)
+results_list70 <- lapply(results70$businesses, FUN = yelp_httr_parse)
+results_list71 <- lapply(results71$businesses, FUN = yelp_httr_parse)
+results_list72 <- lapply(results72$businesses, FUN = yelp_httr_parse)
+results_list73 <- lapply(results73$businesses, FUN = yelp_httr_parse)
+results_list74 <- lapply(results74$businesses, FUN = yelp_httr_parse)
+results_list75 <- lapply(results75$businesses, FUN = yelp_httr_parse)
+results_list76 <- lapply(results76$businesses, FUN = yelp_httr_parse)
+results_list77 <- lapply(results77$businesses, FUN = yelp_httr_parse)
+results_list78 <- lapply(results78$businesses, FUN = yelp_httr_parse)
+results_list79 <- lapply(results79$businesses, FUN = yelp_httr_parse)
+results_list80 <- lapply(results80$businesses, FUN = yelp_httr_parse)
+results_list81 <- lapply(results81$businesses, FUN = yelp_httr_parse)
+results_list82 <- lapply(results82$businesses, FUN = yelp_httr_parse)
+results_list83 <- lapply(results83$businesses, FUN = yelp_httr_parse)
 
-restaurant_data <- do.call("rbind", results_list)
-restaurant_data2 <- do.call("rbind", results_list2)
-restaurant_data3 <- do.call("rbind", results_list3)
-restaurant_data4 <- do.call("rbind", results_list4)
-restaurant_data5 <- do.call("rbind", results_list5)
-restaurant_data6 <- do.call("rbind", results_list6)
-restaurant_data7 <- do.call("rbind", results_list7)
-restaurant_data8 <- do.call("rbind", results_list8)
-restaurant_data9 <- do.call("rbind", results_list9)
-restaurant_data10 <- do.call("rbind", results_list10)
-restaurant_data11 <- do.call("rbind", results_list11)
-restaurant_data12 <- do.call("rbind", results_list12)
+food_data <- do.call("rbind", results_list)
+food_data2 <- do.call("rbind", results_list2)
+food_data3 <- do.call("rbind", results_list3)
+food_data4 <- do.call("rbind", results_list4)
+food_data5 <- do.call("rbind", results_list5)
+food_data6 <- do.call("rbind", results_list6)
+food_data7 <- do.call("rbind", results_list7)
+food_data8 <- do.call("rbind", results_list8)
+food_data9 <- do.call("rbind", results_list9)
+food_data10 <- do.call("rbind", results_list10)
+food_data11 <- do.call("rbind", results_list11)
+food_data12 <- do.call("rbind", results_list12)
+food_data13 <- do.call("rbind", results_list13)
+food_data14 <- do.call("rbind", results_list14)
+food_data15 <- do.call("rbind", results_list15)
+food_data16 <- do.call("rbind", results_list16)
+food_data17 <- do.call("rbind", results_list17)
+food_data18 <- do.call("rbind", results_list18)
+food_data19 <- do.call("rbind", results_list19)
+food_data20 <- do.call("rbind", results_list20)
+food_data21 <- do.call("rbind", results_list21)
+food_data22 <- do.call("rbind", results_list22)
+food_data23 <- do.call("rbind", results_list23)
+food_data24 <- do.call("rbind", results_list24)
+food_data25 <- do.call("rbind", results_list25)
+food_data26 <- do.call("rbind", results_list26)
+food_data27 <- do.call("rbind", results_list27)
+food_data28 <- do.call("rbind", results_list28)
+food_data29 <- do.call("rbind", results_list29)
+food_data30 <- do.call("rbind", results_list30)
+food_data31 <- do.call("rbind", results_list31)
+food_data32 <- do.call("rbind", results_list32)
+food_data33 <- do.call("rbind", results_list33)
+food_data34 <- do.call("rbind", results_list34)
+food_data35 <- do.call("rbind", results_list35)
+food_data36 <- do.call("rbind", results_list36)
+food_data37 <- do.call("rbind", results_list37)
+food_data38 <- do.call("rbind", results_list38)
+food_data39 <- do.call("rbind", results_list39)
+food_data40 <- do.call("rbind", results_list40)
+food_data41 <- do.call("rbind", results_list41)
+food_data42 <- do.call("rbind", results_list42)
+food_data43 <- do.call("rbind", results_list43)
+food_data44 <- do.call("rbind", results_list44)
+food_data45 <- do.call("rbind", results_list45)
+food_data46 <- do.call("rbind", results_list46)
+food_data47 <- do.call("rbind", results_list47)
+food_data48 <- do.call("rbind", results_list48)
+food_data49 <- do.call("rbind", results_list49)
+food_data50 <- do.call("rbind", results_list50)
+food_data51 <- do.call("rbind", results_list51)
+food_data52 <- do.call("rbind", results_list52)
+food_data53 <- do.call("rbind", results_list53)
+food_data54 <- do.call("rbind", results_list54)
+food_data55 <- do.call("rbind", results_list55)
+food_data56 <- do.call("rbind", results_list56)
+food_data57 <- do.call("rbind", results_list57)
+food_data58 <- do.call("rbind", results_list58)
+food_data59 <- do.call("rbind", results_list59)
+food_data60 <- do.call("rbind", results_list60)
+food_data61 <- do.call("rbind", results_list61)
+food_data62 <- do.call("rbind", results_list62)
+food_data63 <- do.call("rbind", results_list63)
+food_data64 <- do.call("rbind", results_list64)
+food_data65 <- do.call("rbind", results_list65)
+food_data66 <- do.call("rbind", results_list66)
+food_data67 <- do.call("rbind", results_list67)
+food_data68 <- do.call("rbind", results_list68)
+food_data69 <- do.call("rbind", results_list69)
+food_data70 <- do.call("rbind", results_list70)
+food_data71 <- do.call("rbind", results_list71)
+food_data72 <- do.call("rbind", results_list72)
+food_data73 <- do.call("rbind", results_list73)
+food_data74 <- do.call("rbind", results_list74)
+food_data75 <- do.call("rbind", results_list75)
+food_data76 <- do.call("rbind", results_list76)
+food_data77 <- do.call("rbind", results_list77)
+food_data78 <- do.call("rbind", results_list78)
+food_data79 <- do.call("rbind", results_list79)
+food_data80 <- do.call("rbind", results_list80)
+food_data81 <- do.call("rbind", results_list81)
+food_data82 <- do.call("rbind", results_list82)
+food_data83 <- do.call("rbind", results_list83)
 
-all_restaurant <- rbind(
-  restaurant_data, 
-  restaurant_data2, 
-  restaurant_data3,
-  restaurant_data4,
-  restaurant_data5,
-  restaurant_data6,
-  restaurant_data7,
-  restaurant_data8,
-  restaurant_data9, 
-  restaurant_data10,
-  restaurant_data11,
-  restaurant_data12)
+all_establishments <- rbind(
+  food_data, 
+  food_data2, 
+  food_data3,
+  food_data4,
+  food_data5,
+  food_data6,
+  food_data7,
+  food_data8,
+  food_data9, 
+  food_data10,
+  food_data11,
+  food_data12,
+  food_data13,
+  food_data14,
+  food_data15,
+  food_data16,
+  food_data17,
+  food_data18,
+  food_data19,
+  food_data20,
+  food_data21,
+  food_data22,
+  food_data23,
+  food_data24,
+  food_data25,
+  food_data26,
+  food_data27,
+  food_data28,
+  food_data29,
+  food_data30,
+  food_data31,
+  food_data32,
+  food_data33,
+  food_data34,
+  food_data35,
+  food_data36,
+  food_data37,
+  food_data38,
+  food_data39,
+  food_data40,
+  food_data41,
+  food_data42,
+  food_data43,
+  food_data44,
+  food_data45,
+  food_data46,
+  food_data47,
+  food_data48,
+  food_data49,
+  food_data50,
+  food_data51,
+  food_data52,
+  food_data53,
+  food_data54,
+  food_data55,
+  food_data56,
+  food_data57,
+  food_data58,
+  food_data59,
+  food_data60,
+  food_data61,
+  food_data62,
+  food_data63,
+  food_data64,
+  food_data65,
+  food_data66,
+  food_data67,
+  food_data68,
+  food_data69,
+  food_data70,
+  food_data71,
+  food_data72,
+  food_data73,
+  food_data74,
+  food_data75,
+  food_data76,
+  food_data77,
+  food_data78,
+  food_data79,
+  food_data80,
+  food_data81,
+  food_data82,
+  food_data83)
 ```
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;One of the columns of interest in our dataset (all_restaurant), 'categories', requires some clean-up with formatting. Thus, we will reformat that column in order to make it more understandable and clear.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;One of the columns of interest in our dataset (all_establishments), 'categories', requires some clean-up with formatting. Thus, we will reformat that column in order to make it more understandable and clear.
 
 ```{r results='hide', message=FALSE, warning=FALSE}
 #clean up data
-all_restaurant$categories <- all_restaurant$categories %>%
+all_establishments$categories <- all_establishments$categories %>%
   str_replace_all(., "list\\(alias = ", "") %>%
   str_replace_all(., "\\)", "") %>%
   str_replace_all(., "\\(New", "- New") %>%
@@ -289,10 +791,11 @@ all_restaurant$categories <- all_restaurant$categories %>%
   str_replace_all(., "distilleries", "") %>%
   str_replace_all(., "dinnertheater", "") %>%
   str_replace_all(., "poke", "") %>%
-  str_replace_all(., "tea", "") %>%
+  str_replace_all(., "teaTea", "Tea") %>%
   str_replace_all(., "social_clubs", "") %>%
   str_replace_all(., "markets", "") %>%
   str_replace_all(., "popcorn", "") %>%
+  str_replace_all(., "buffets", "") %>%
   str_replace_all(., "importedfood", "")
 ```
 
