@@ -4,10 +4,13 @@ subtitle: 'SURVMETH 727 Term Project'
 author: "Rebecca Oh, Alexa Zmich"
 date: "December 2019"
 output: pdf_document
+geometry: margin=0.75in
 ---
 
 ## Setup
 ```{r message=FALSE, warning=FALSE}
+library(knitr)
+library(markdown)
 library(tidyverse)
 library(httr)
 library(RSocrata)
