@@ -1,9 +1,12 @@
 ---
 title: "Food For Thought"
-subtitle: 'SURVMETH 727 Term Project'
 author: "Rebecca Oh, Alexa Zmich"
 date: "December 2019"
-output: pdf_document
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+subtitle: SURVMETH 727 Term Project
 ---
 
 ## Setup
@@ -45,37 +48,25 @@ yelp3 <- "https://api.yelp.com/v3/businesses/search/?limit=50&offset=100&sort=0&
 yelp4 <- "https://api.yelp.com/v3/businesses/search/?limit=50&offset=150&sort=0&term=food&location=MI"
 yelp5 <- "https://api.yelp.com/v3/businesses/search/?limit=50&offset=200&sort=0&term=food&location=MI"
 yelp6 <- "https://api.yelp.com/v3/businesses/search/?limit=50&offset=250&sort=0&term=food&location=MI"
-yelp6 <- "https://api.yelp.com/v3/businesses/search/?limit=50&offset=300&sort=0&term=food&location=MI"
+yelp7 <- "https://api.yelp.com/v3/businesses/search/?limit=50&offset=300&sort=0&term=food&location=MI"
 yelp8 <- "https://api.yelp.com/v3/businesses/search/?limit=50&offset=350&sort=0&term=food&location=MI"
 yelp9 <- "https://api.yelp.com/v3/businesses/search/?limit=50&offset=400&sort=0&term=food&location=MI"
 yelp10 <- "https://api.yelp.com/v3/businesses/search/?limit=50&offset=450&sort=0&term=food&location=MI"
 yelp11 <- "https://api.yelp.com/v3/businesses/search/?limit=50&offset=500&sort=0&term=food&location=MI"
 yelp12 <- "https://api.yelp.com/v3/businesses/search/?limit=50&offset=550&sort=0&term=food&location=MI"
 
-url <- modify_url(yelp, path = c("v3", "businesses", "search"),
-                  query = list(term = term, location = location, limit = limit))
-url2 <- modify_url(yelp2, path = c("v3", "businesses", "search"),
-                  query = list(term = term, location = location, limit = limit))
-url3 <- modify_url(yelp3, path = c("v3", "businesses", "search"),
-                  query = list(term = term, location = location, limit = limit))
-url4 <- modify_url(yelp4, path = c("v3", "businesses", "search"),
-                  query = list(term = term, location = location, limit = limit))
-url5 <- modify_url(yelp5, path = c("v3", "businesses", "search"),
-                  query = list(term = term, location = location, limit = limit))
-url6 <- modify_url(yelp6, path = c("v3", "businesses", "search"),
-                  query = list(term = term, location = location, limit = limit))
-url7 <- modify_url(yelp7, path = c("v3", "businesses", "search"),
-                  query = list(term = term, location = location, limit = limit))
-url8 <- modify_url(yelp8, path = c("v3", "businesses", "search"),
-                  query = list(term = term, location = location, limit = limit))
-url9 <- modify_url(yelp9, path = c("v3", "businesses", "search"),
-                  query = list(term = term, location = location, limit = limit))
-url10 <- modify_url(yelp10, path = c("v3", "businesses", "search"),
-                  query = list(term = term, location = location, limit = limit))
-url11 <- modify_url(yelp11, path = c("v3", "businesses", "search"),
-                  query = list(term = term, location = location, limit = limit))
-url12 <- modify_url(yelp12, path = c("v3", "businesses", "search"),
-                  query = list(term = term, location = location, limit = limit))
+url <- modify_url(yelp, path = c("v3", "businesses", "search"))
+url2 <- modify_url(yelp2, path = c("v3", "businesses", "search"))
+url3 <- modify_url(yelp3, path = c("v3", "businesses", "search"))
+url4 <- modify_url(yelp4, path = c("v3", "businesses", "search"))
+url5 <- modify_url(yelp5, path = c("v3", "businesses", "search"))
+url6 <- modify_url(yelp6, path = c("v3", "businesses", "search"))
+url7 <- modify_url(yelp7, path = c("v3", "businesses", "search"))
+url8 <- modify_url(yelp8, path = c("v3", "businesses", "search"))
+url9 <- modify_url(yelp9, path = c("v3", "businesses", "search"))
+url10 <- modify_url(yelp10, path = c("v3", "businesses", "search"))
+url11 <- modify_url(yelp11, path = c("v3", "businesses", "search"))
+url12 <- modify_url(yelp12, path = c("v3", "businesses", "search"))
 
 res <- GET(url, add_headers('Authorization' = paste("bearer", client_secret)))
 res2 <- GET(url2, add_headers('Authorization' = paste("bearer", client_secret)))
@@ -120,7 +111,7 @@ yelp_httr_parse <- function(x) {
   
   parse_list <- lapply(parse_list, FUN = function(x) ifelse(is.null(x), "", x))
   
-  df <- data_frame(id=parse_list$id,
+  df <- tibble(id=parse_list$id,
                    name=parse_list$name, 
                    categories = parse_list$categories, 
                    rating = parse_list$rating, 
@@ -300,7 +291,8 @@ all_restaurant$categories <- all_restaurant$categories %>%
   str_replace_all(., "tea", "") %>%
   str_replace_all(., "social_clubs", "") %>%
   str_replace_all(., "markets", "") %>%
-  str_replace_all(., "popcorn", "")
+  str_replace_all(., "popcorn", "") %>%
+  str_replace_all(., "importedfood", "")
 ```
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The data from Yelp provides us information regarding location (city, state, longtitude, latitude). However, we are interested in studying counties within the state of Michigan. Thus, we will create an object that will map the restaurant's location to its associated county.
