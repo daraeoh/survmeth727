@@ -10,6 +10,9 @@ output: pdf_document
 ```{r message=FALSE, warning=FALSE}
 library(tidyverse)
 library(httr)
+library(RSocrata)
+library(tidyverse)
+library(stringr)
 ```
 
 ## Introduction
@@ -18,7 +21,7 @@ According to the  Journal of the American Medical Association, the leading cause
 
 ## Methods (data (sources, gathering steps))
 
-First, we will store Yelp's API key as an object, and we will use this object in the following API queries. 
+First, we will store Yelp's API key as an object, and we will use this object in the following API queries and to ultimately get our dataset.
 
 ```{r}
 #create a token for use with API request
@@ -79,18 +82,47 @@ yelp_httr_parse <- function(x) {
 results_list <- lapply(results$businesses, FUN = yelp_httr_parse)
 
 restaurant_data <- do.call("rbind", results_list)
+```
 
-while(length(restaurant_data$result) > 0) {
-  # print the result
-  print(restaurant_data$results)
-  # get the next page
-  nextPage <- restaurant_data$current_page + 1
-  resp <- GET(
-    paste0(connectServer, apiPrefix, "&page_number=", nextPage),
-    authHeader
-  )
-  restaurant_data
-}
+The column of interest in our data from Yelp, 'categories', required some clean-up with formatting. Thus, we have reformatted that column in order to make it more understandable and clear.
+
+```{r}
+#clean up data
+restaurant_data$categories <- restaurant_data$categories %>%
+  str_replace_all(., "list\\(alias = ", "") %>%
+  str_replace_all(., "\\)", "") %>%
+  str_replace_all(., "\\(New", "- New") %>%
+  str_replace_all(., "\\(Traditional", "- Traditional") %>%
+  str_replace_all(., "newamerican", "") %>%
+  str_replace_all(., ", title = ", "") %>%
+  str_replace_all(., "\"", "") %>%
+  str_replace_all(., "burgers", "") %>%
+  str_replace_all(., "beergardens", "") %>%
+  str_replace_all(., "bars", "") %>%
+  str_replace_all(., "mediterranean", "") %>%
+  str_replace_all(., "noodles", "") %>%
+  str_replace_all(., "breakfast_brunch", "") %>%
+  str_replace_all(., "himalayan", "") %>%
+  str_replace_all(., "thai", "") %>%
+  str_replace_all(., "restaurants", "") %>%
+  str_replace_all(., "mexican", "") %>%
+  str_replace_all(., "pizza", "") %>%
+  str_replace_all(., "ramen", "") %>%
+  str_replace_all(., "tacos", "") %>%
+  str_replace_all(., "gastropubs", "") %>%
+  str_replace_all(., "asianfusion", "") %>%
+  str_replace_all(., "comfortfood", "") %>%
+  str_replace_all(., "tradamerican", "") %>%
+  str_replace_all(., "sports", "") %>%
+  str_replace_all(., "french", "") %>%
+  str_replace_all(., "foodtrucks", "") %>%
+  str_replace_all(., "african", "") %>%
+  str_replace_all(., "pubs", "") %>%
+  str_replace_all(., "cuban", "") %>%
+  str_replace_all(., "hotdog", "") %>%
+  str_replace_all(., "diners", "") %>%
+  str_replace_all(., "delis", "") %>%
+  str_replace_all(., "caribbean", "")
 ```
 
 ## Results (e.g.  graphs, exploratory analysis)
