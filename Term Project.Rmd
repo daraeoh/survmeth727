@@ -799,6 +799,8 @@ all_establishments$categories <- all_establishments$categories %>%
   str_replace_all(., "importedfood", "")
 ```
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Our cleaned data has 1570 observations since the most populated area of certain counties have less than 20 food establishment options on Yelp.
+
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The data from Yelp provides us information regarding location (city, state, longtitude, latitude). However, we are interested in studying counties within the state of Michigan. Thus, we will create an object that will map the restaurant's location to its associated county.
 ```{r}
 
