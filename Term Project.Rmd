@@ -24,7 +24,7 @@ library(noncensus)
 
 ## Methods (data (sources, gathering steps))
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In order to answer our main research question, we will first need to gather data from Yelp. We have chosen Yelp our data gathering source, as it stores information regarding restaurant name, cuisine type, and location, which we will later use to test for correlation against obesity. We will store Yelp's API key as an object, and we will use this object in the following API queries to ultimately form our dataset.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In order to answer our main research question, we will first need to gather data from Yelp. We have chosen Yelp as our data gathering source, as it stores information regarding restaurant name, cuisine type, and location, which we will later use to test for correlation against obesity. We will store Yelp's API key as an object, and we will use this object in the following API queries to ultimately form our dataset. The Yelp API only returns 50 observations, so we will offset in intervals of 50 to get multiple unique datasets of 50 observations each. We will then merge these different datasets to obtain our dataset of [number] observations, which we will use for our main analysis.
 
 ```{r}
 #create a token for use with API request
@@ -45,8 +45,12 @@ yelp3 <- "https://api.yelp.com/v3/businesses/search/?limit=50&offset=100&sort=0&
 yelp4 <- "https://api.yelp.com/v3/businesses/search/?limit=50&offset=150&sort=0&term=food&location=MI"
 yelp5 <- "https://api.yelp.com/v3/businesses/search/?limit=50&offset=200&sort=0&term=food&location=MI"
 yelp6 <- "https://api.yelp.com/v3/businesses/search/?limit=50&offset=250&sort=0&term=food&location=MI"
-yelp7 <- "https://api.yelp.com/v3/businesses/search/?limit=50&offset=300&sort=0&term=food&location=MI"
+yelp6 <- "https://api.yelp.com/v3/businesses/search/?limit=50&offset=300&sort=0&term=food&location=MI"
 yelp8 <- "https://api.yelp.com/v3/businesses/search/?limit=50&offset=350&sort=0&term=food&location=MI"
+yelp9 <- "https://api.yelp.com/v3/businesses/search/?limit=50&offset=400&sort=0&term=food&location=MI"
+yelp10 <- "https://api.yelp.com/v3/businesses/search/?limit=50&offset=450&sort=0&term=food&location=MI"
+yelp11 <- "https://api.yelp.com/v3/businesses/search/?limit=50&offset=500&sort=0&term=food&location=MI"
+yelp12 <- "https://api.yelp.com/v3/businesses/search/?limit=50&offset=550&sort=0&term=food&location=MI"
 
 url <- modify_url(yelp, path = c("v3", "businesses", "search"),
                   query = list(term = term, location = location, limit = limit))
@@ -64,6 +68,14 @@ url7 <- modify_url(yelp7, path = c("v3", "businesses", "search"),
                   query = list(term = term, location = location, limit = limit))
 url8 <- modify_url(yelp8, path = c("v3", "businesses", "search"),
                   query = list(term = term, location = location, limit = limit))
+url9 <- modify_url(yelp9, path = c("v3", "businesses", "search"),
+                  query = list(term = term, location = location, limit = limit))
+url10 <- modify_url(yelp10, path = c("v3", "businesses", "search"),
+                  query = list(term = term, location = location, limit = limit))
+url11 <- modify_url(yelp11, path = c("v3", "businesses", "search"),
+                  query = list(term = term, location = location, limit = limit))
+url12 <- modify_url(yelp12, path = c("v3", "businesses", "search"),
+                  query = list(term = term, location = location, limit = limit))
 
 res <- GET(url, add_headers('Authorization' = paste("bearer", client_secret)))
 res2 <- GET(url2, add_headers('Authorization' = paste("bearer", client_secret)))
@@ -73,6 +85,10 @@ res5 <- GET(url5, add_headers('Authorization' = paste("bearer", client_secret)))
 res6 <- GET(url6, add_headers('Authorization' = paste("bearer", client_secret)))
 res7 <- GET(url7, add_headers('Authorization' = paste("bearer", client_secret)))
 res8 <- GET(url8, add_headers('Authorization' = paste("bearer", client_secret)))
+res9 <- GET(url9, add_headers('Authorization' = paste("bearer", client_secret)))
+res10 <- GET(url10, add_headers('Authorization' = paste("bearer", client_secret)))
+res11 <- GET(url11, add_headers('Authorization' = paste("bearer", client_secret)))
+res12 <- GET(url12, add_headers('Authorization' = paste("bearer", client_secret)))
 
 results <- content(res)
 results2 <- content(res2)
@@ -82,6 +98,10 @@ results5 <- content(res5)
 results6 <- content(res6)
 results7 <- content(res7)
 results8 <- content(res8)
+results9 <- content(res9)
+results10 <- content(res10)
+results11 <- content(res11)
+results12 <- content(res12)
 
 #parse data
 yelp_httr_parse <- function(x) {
@@ -122,6 +142,10 @@ results_list5 <- lapply(results5$businesses, FUN = yelp_httr_parse)
 results_list6 <- lapply(results6$businesses, FUN = yelp_httr_parse)
 results_list7 <- lapply(results7$businesses, FUN = yelp_httr_parse)
 results_list8 <- lapply(results8$businesses, FUN = yelp_httr_parse)
+results_list9 <- lapply(results9$businesses, FUN = yelp_httr_parse)
+results_list10 <- lapply(results10$businesses, FUN = yelp_httr_parse)
+results_list11 <- lapply(results11$businesses, FUN = yelp_httr_parse)
+results_list12 <- lapply(results12$businesses, FUN = yelp_httr_parse)
 
 restaurant_data <- do.call("rbind", results_list)
 restaurant_data2 <- do.call("rbind", results_list2)
@@ -131,6 +155,10 @@ restaurant_data5 <- do.call("rbind", results_list5)
 restaurant_data6 <- do.call("rbind", results_list6)
 restaurant_data7 <- do.call("rbind", results_list7)
 restaurant_data8 <- do.call("rbind", results_list8)
+restaurant_data9 <- do.call("rbind", results_list9)
+restaurant_data10 <- do.call("rbind", results_list10)
+restaurant_data11 <- do.call("rbind", results_list11)
+restaurant_data12 <- do.call("rbind", results_list12)
 
 all_restaurant <- rbind(
   restaurant_data, 
@@ -140,7 +168,11 @@ all_restaurant <- rbind(
   restaurant_data5,
   restaurant_data6,
   restaurant_data7,
-  restaurant_data8)
+  restaurant_data8,
+  restaurant_data9, 
+  restaurant_data10,
+  restaurant_data11,
+  restaurant_data12)
 ```
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The column of interest in our data from Yelp (restaurant_data), 'categories', requires some clean-up with formatting. Thus, we will reformat that column in order to make it more understandable and clear.
@@ -220,7 +252,7 @@ all_restaurant$categories <- all_restaurant$categories %>%
   str_replace_all(., "peruvian", "") %>%
   str_replace_all(., "tapas", "") %>%
   str_replace_all(., "senegalese", "") %>%
-  str_replace_all(., "divee", "") %>%
+  str_replace_all(., "dive", "") %>%
   str_replace_all(., "dominican", "") %>%
   str_replace_all(., "fishnchips", "") %>%
   str_replace_all(., "japanese", "") %>%
@@ -251,7 +283,24 @@ all_restaurant$categories <- all_restaurant$categories %>%
   str_replace_all(., "beer_and_wine", "") %>%
   str_replace_all(., "massage_therapy", "") %>%
   str_replace_all(., "cheeses", "") %>%
-  str_replace_all(., "markets", "") 
+  str_replace_all(., "diyfood", "") %>%
+  str_replace_all(., "soup", "") %>%
+  str_replace_all(., "cajun", "") %>%
+  str_replace_all(., "nightlife", "") %>%
+  str_replace_all(., "cakeshop", "") %>%
+  str_replace_all(., "ethiopian", "") %>%
+  str_replace_all(., "customcakes", "") %>%
+  str_replace_all(., "southern", "") %>%
+  str_replace_all(., "foodstands", "") %>%
+  str_replace_all(., "wine_", "") %>%
+  str_replace_all(., "kebab", "") %>%
+  str_replace_all(., "distilleries", "") %>%
+  str_replace_all(., "dinnertheater", "") %>%
+  str_replace_all(., "poke", "") %>%
+  str_replace_all(., "tea", "") %>%
+  str_replace_all(., "social_clubs", "") %>%
+  str_replace_all(., "markets", "") %>%
+  str_replace_all(., "popcorn", "")
 ```
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The data from Yelp provides us information regarding location (city, state, longtitude, latitude). However, we are interested in studying counties within the state of Michigan. Thus, we will create an object that will map the restaurant's location to its associated county.
