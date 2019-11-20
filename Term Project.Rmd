@@ -46,7 +46,9 @@ res <- POST("https://api.yelp.com/oauth2/token",
 token <- content(res)$access_token
 ```
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In terms of data gathering, the Yelp API does not support gathering data by searching a whole county for the U.S.; it obligates us to search a city. Additionally, the API has a limit of 50 queries. Thus, we collected the top 20 most popular food establishments in the most populated city of each of the 83 counties (indicated in the commented code below) in the state of Michigan. We will search with "food" as the term of interest and the "location" as the most populated city within the specific county. Then, we will append all 83 datasets to have a full dataset of the most popular food establishments, cuisine type of each food establishment, and city of each food establishment for the state of Michigan.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In terms of data gathering, the Yelp API does not support gathering data by searching a whole county for the U.S.; it obligates us to search a city. Additionally, the API has a limit of 50 queries. Thus, we collected the top 20 most popular food establishments of (or near) the most populated city of each of the 83 counties (indicated in the commented code below) in the state of Michigan. We will search with "food" as the term of interest and the "location" as the most populated area within the specific county. Then, we will append all 83 datasets to have a full dataset of the most popular food establishments, cuisine type of each food establishment, and city (or nearby city) of each food establishment for the state of Michigan.
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The data from Yelp provides us information regarding location (city, state, longtitude, latitude). However, we are interested in studying counties within the state of Michigan. Thus, we will create an object that will provide us with the food establishment's county, mapped from its corresponding city.
 
 ```{r}
 #search url and collect data per county
@@ -501,89 +503,337 @@ results_list81 <- lapply(results81$businesses, FUN = yelp_httr_parse)
 results_list82 <- lapply(results82$businesses, FUN = yelp_httr_parse)
 results_list83 <- lapply(results83$businesses, FUN = yelp_httr_parse)
 
-food_data <- do.call("rbind", results_list)
-food_data2 <- do.call("rbind", results_list2)
-food_data3 <- do.call("rbind", results_list3)
-food_data4 <- do.call("rbind", results_list4)
-food_data5 <- do.call("rbind", results_list5)
-food_data6 <- do.call("rbind", results_list6)
-food_data7 <- do.call("rbind", results_list7)
-food_data8 <- do.call("rbind", results_list8)
-food_data9 <- do.call("rbind", results_list9)
-food_data10 <- do.call("rbind", results_list10)
-food_data11 <- do.call("rbind", results_list11)
-food_data12 <- do.call("rbind", results_list12)
-food_data13 <- do.call("rbind", results_list13)
-food_data14 <- do.call("rbind", results_list14)
-food_data15 <- do.call("rbind", results_list15)
-food_data16 <- do.call("rbind", results_list16)
-food_data17 <- do.call("rbind", results_list17)
-food_data18 <- do.call("rbind", results_list18)
-food_data19 <- do.call("rbind", results_list19)
-food_data20 <- do.call("rbind", results_list20)
-food_data21 <- do.call("rbind", results_list21)
-food_data22 <- do.call("rbind", results_list22)
-food_data23 <- do.call("rbind", results_list23)
-food_data24 <- do.call("rbind", results_list24)
-food_data25 <- do.call("rbind", results_list25)
-food_data26 <- do.call("rbind", results_list26)
-food_data27 <- do.call("rbind", results_list27)
-food_data28 <- do.call("rbind", results_list28)
-food_data29 <- do.call("rbind", results_list29)
-food_data30 <- do.call("rbind", results_list30)
-food_data31 <- do.call("rbind", results_list31)
-food_data32 <- do.call("rbind", results_list32)
-food_data33 <- do.call("rbind", results_list33)
-food_data34 <- do.call("rbind", results_list34)
-food_data35 <- do.call("rbind", results_list35)
-food_data36 <- do.call("rbind", results_list36)
-food_data37 <- do.call("rbind", results_list37)
-food_data38 <- do.call("rbind", results_list38)
-food_data39 <- do.call("rbind", results_list39)
-food_data40 <- do.call("rbind", results_list40)
-food_data41 <- do.call("rbind", results_list41)
-food_data42 <- do.call("rbind", results_list42)
-food_data43 <- do.call("rbind", results_list43)
-food_data44 <- do.call("rbind", results_list44)
-food_data45 <- do.call("rbind", results_list45)
-food_data46 <- do.call("rbind", results_list46)
-food_data47 <- do.call("rbind", results_list47)
-food_data48 <- do.call("rbind", results_list48)
-food_data49 <- do.call("rbind", results_list49)
-food_data50 <- do.call("rbind", results_list50)
-food_data51 <- do.call("rbind", results_list51)
-food_data52 <- do.call("rbind", results_list52)
-food_data53 <- do.call("rbind", results_list53)
-food_data54 <- do.call("rbind", results_list54)
-food_data55 <- do.call("rbind", results_list55)
-food_data56 <- do.call("rbind", results_list56)
-food_data57 <- do.call("rbind", results_list57)
-food_data58 <- do.call("rbind", results_list58)
-food_data59 <- do.call("rbind", results_list59)
-food_data60 <- do.call("rbind", results_list60)
-food_data61 <- do.call("rbind", results_list61)
-food_data62 <- do.call("rbind", results_list62)
-food_data63 <- do.call("rbind", results_list63)
-food_data64 <- do.call("rbind", results_list64)
-food_data65 <- do.call("rbind", results_list65)
-food_data66 <- do.call("rbind", results_list66)
-food_data67 <- do.call("rbind", results_list67)
-food_data68 <- do.call("rbind", results_list68)
-food_data69 <- do.call("rbind", results_list69)
-food_data70 <- do.call("rbind", results_list70)
-food_data71 <- do.call("rbind", results_list71)
-food_data72 <- do.call("rbind", results_list72)
-food_data73 <- do.call("rbind", results_list73)
-food_data74 <- do.call("rbind", results_list74)
-food_data75 <- do.call("rbind", results_list75)
-food_data76 <- do.call("rbind", results_list76)
-food_data77 <- do.call("rbind", results_list77)
-food_data78 <- do.call("rbind", results_list78)
-food_data79 <- do.call("rbind", results_list79)
-food_data80 <- do.call("rbind", results_list80)
-food_data81 <- do.call("rbind", results_list81)
-food_data82 <- do.call("rbind", results_list82)
-food_data83 <- do.call("rbind", results_list83)
+food <- do.call("rbind", results_list)
+county <- rep("Wayne",length(food$city))
+food_data <- cbind(food, county)
+
+food2 <- do.call("rbind", results_list2)
+county <- rep("Oakland", length(food2$city))
+food_data2 <- cbind(food2, county)
+
+food3 <- do.call("rbind", results_list3)
+county <- rep("Macomb", length(food3$city))
+food_data3 <- cbind(food3, county)
+
+food4 <- do.call("rbind", results_list4)
+county <- rep("Kent", length(food4$city))
+food_data4 <- cbind(food4, county)
+
+food5 <- do.call("rbind", results_list5)
+county <- rep("Genesee", length(food5$city))
+food_data5 <- cbind(food5, county)
+
+food6 <- do.call("rbind", results_list6)
+county <- rep("Washtenaw", length(food6$city))
+food_data6 <- cbind(food6, county)
+
+food7 <- do.call("rbind", results_list7)
+county <- rep("Ingham", length(food7$city))
+food_data7 <- cbind(food7, county)
+
+food8 <- do.call("rbind", results_list8)
+county <- rep("Ottawa", length(food8$city))
+food_data8 <- cbind(food8, county)
+
+food9 <- do.call("rbind", results_list9)
+county <- rep("Kalamazoo", length(food9$city))
+food_data9 <- cbind(food9, county)
+
+food10 <- do.call("rbind", results_list10)
+county <- rep("Livingston", length(food10$city))
+food_data10 <- cbind(food10, county)
+
+food11 <- do.call("rbind", results_list11)
+county <- rep("Saginaw", length(food11$city))
+food_data11 <- cbind(food11, county)
+
+food12 <- do.call("rbind", results_list12)
+county <- rep("Muskegon", length(food12$city))
+food_data12 <- cbind(food12, county)
+
+food13 <- do.call("rbind", results_list13)
+county <- rep("St. Clair", length(food13$city))
+food_data13 <- cbind(food13, county)
+
+food14 <- do.call("rbind", results_list14)
+county <- rep("Jackson", length(food14$city))
+food_data14 <- cbind(food14, county)
+
+food15 <- do.call("rbind", results_list15)
+county <- rep("Berrien", length(food15$city))
+food_data15 <- cbind(food15, county)
+
+food16 <- do.call("rbind", results_list16)
+county <- rep("Monroe", length(food16$city))
+food_data16 <- cbind(food16, county)
+
+food17 <- do.call("rbind", results_list17)
+county <- rep("Calhoun", length(food17$city))
+food_data17 <- cbind(food17, county)
+
+food18 <- do.call("rbind", results_list18)
+county <- rep("Allegan", length(food18$city))
+food_data18 <- cbind(food18, county)
+
+food19 <- do.call("rbind", results_list19)
+county <- rep("Eaton", length(food19$city))
+food_data19 <- cbind(food19, county)
+
+food20 <- do.call("rbind", results_list20)
+county <- rep("Bay", length(food20$city))
+food_data20 <- cbind(food20, county)
+
+food21 <- do.call("rbind", results_list21)
+county <- rep("Lenawee", length(food21$city))
+food_data21 <- cbind(food21, county)
+
+food22 <- do.call("rbind", results_list22)
+county <- rep("Grand Traverse", length(food22$city))
+food_data22 <- cbind(food22, county)
+
+food23 <- do.call("rbind", results_list23)
+county <- rep("Lapeer", length(food23$city))
+food_data23 <- cbind(food23, county)
+
+food24 <- do.call("rbind", results_list24)
+county <- rep("Midland", length(food24$city))
+food_data24 <- cbind(food24, county)
+
+food25 <- do.call("rbind", results_list25)
+county <- rep("Clinton", length(food25$city))
+food_data25 <- cbind(food25, county)
+
+food26 <- do.call("rbind", results_list26)
+county <- rep("Van Buren", length(food26$city))
+food_data26 <- cbind(food26, county)
+
+food27 <- do.call("rbind", results_list27)
+county <- rep("Isabella", length(food27$city))
+food_data27 <- cbind(food27, county)
+
+food28 <- do.call("rbind", results_list28)
+county <- rep("Shiawassee", length(food28$city))
+food_data28 <- cbind(food28, county)
+
+food29 <- do.call("rbind", results_list29)
+county <- rep("Marquette", length(food29$city))
+food_data29 <- cbind(food29, county)
+
+food30 <- do.call("rbind", results_list30)
+county <- rep("Ionia", length(food30$city))
+food_data30 <- cbind(food30, county)
+
+food31 <- do.call("rbind", results_list31)
+county <- rep("Montcalm", length(food31$city))
+food_data31 <- cbind(food31, county)
+
+food32 <- do.call("rbind", results_list32)
+county <- rep("Barry", length(food32$city))
+food_data32 <- cbind(food32, county)
+
+food33 <- do.call("rbind", results_list33)
+county <- rep("St. Joseph", length(food33$city))
+food_data33 <- cbind(food33, county)
+
+food34 <- do.call("rbind", results_list34)
+county <- rep("Tuscola", length(food34$city))
+food_data34 <- cbind(food34, county)
+
+food35 <- do.call("rbind", results_list35)
+county <- rep("Cass", length(food35$city))
+food_data35 <- cbind(food35, county)
+
+food36 <- do.call("rbind", results_list36)
+county <- rep("Newaygo", length(food36$city))
+food_data36 <- cbind(food36, county)
+
+food37 <- do.call("rbind", results_list37)
+county <- rep("Hillsdale", length(food37$city))
+food_data37 <- cbind(food37, county)
+
+food38 <- do.call("rbind", results_list38)
+county <- rep("Branch", length(food38$city))
+food_data38 <- cbind(food38, county)
+
+food39 <- do.call("rbind", results_list39)
+county <- rep("Mecosta", length(food39$city))
+food_data39 <- cbind(food39, county)
+
+food40 <- do.call("rbind", results_list40)
+county <- rep("Sanilac", length(food40$city))
+food_data40 <- cbind(food40, county)
+
+food41 <- do.call("rbind", results_list41)
+county <- rep("Gratiot", length(food41$city))
+food_data41 <- cbind(food41, county)
+
+food42 <- do.call("rbind", results_list42)
+county <- rep("Chippewa", length(food42$city))
+food_data42 <- cbind(food42, county)
+
+food43 <- do.call("rbind", results_list43)
+county <- rep("Houghton", length(food43$city))
+food_data43 <- cbind(food43, county)
+
+food44 <- do.call("rbind", results_list44)
+county <- rep("Delta", length(food44$city))
+food_data44 <- cbind(food44, county)
+
+food45 <- do.call("rbind", results_list45)
+county <- rep("Wexford", length(food45$city))
+food_data45 <- cbind(food45, county)
+
+food46 <- do.call("rbind", results_list46)
+county <- rep("Emmet", length(food46$city))
+food_data46 <- cbind(food46, county)
+
+food47 <- do.call("rbind", results_list47)
+county <- rep("Huron", length(food47$city))
+food_data47 <- cbind(food47, county)
+
+food48 <- do.call("rbind", results_list48)
+county <- rep("Clare", length(food48$city))
+food_data48 <- cbind(food48, county)
+
+food49 <- do.call("rbind", results_list49)
+county <- rep("Mason", length(food49$city))
+food_data49 <- cbind(food49, county)
+
+food50 <- do.call("rbind", results_list50)
+county <- rep("Alpena", length(food50$city))
+food_data50 <- cbind(food50, county)
+
+food51 <- do.call("rbind", results_list51)
+county <- rep("Oceana", length(food51$city))
+food_data51 <- cbind(food51, county)
+
+food52 <- do.call("rbind", results_list52)
+county <- rep("Charlevoix", length(food52$city))
+food_data52 <- cbind(food52, county)
+
+food53 <- do.call("rbind", results_list53)
+county <- rep("Cheboygan", length(food53$city))
+food_data53 <- cbind(food53, county)
+
+food54 <- do.call("rbind", results_list54)
+county <- rep("Dickinson", length(food54$city))
+food_data54 <- cbind(food54, county)
+
+food55 <- do.call("rbind", results_list55)
+county <- rep("Gladwin", length(food55$city))
+food_data55 <- cbind(food55, county)
+
+food56 <- do.call("rbind", results_list56)
+county <- rep("Iosco", length(food56$city))
+food_data56 <- cbind(food56, county)
+
+food57 <- do.call("rbind", results_list57)
+county <- rep("Otsego", length(food57$city))
+food_data57 <- cbind(food57, county)
+
+food58 <- do.call("rbind", results_list58)
+county <- rep("Manistee", length(food58$city))
+food_data58 <- cbind(food58, county)
+
+food59 <- do.call("rbind", results_list59)
+county <- rep("Roscommon", length(food59$city))
+food_data59 <- cbind(food59, county)
+
+food60 <- do.call("rbind", results_list60)
+county <- rep("Antrim", length(food60$city))
+food_data60 <- cbind(food60, county)
+
+food61 <- do.call("rbind", results_list61)
+county <- rep("Osceola", length(food61$city))
+food_data61 <- cbind(food61, county)
+
+food62 <- do.call("rbind", results_list62)
+county <- rep("Menominee", length(food62$city))
+food_data62 <- cbind(food62, county)
+
+food63 <- do.call("rbind", results_list63)
+county <- rep("Leelanau", length(food63$city))
+food_data63 <- cbind(food63, county)
+
+food64 <- do.call("rbind", results_list64)
+county <- rep("Ogemaw", length(food64$city))
+food_data64 <- cbind(food64, county)
+
+food65 <- do.call("rbind", results_list65)
+county <- rep("Kalkaska", length(food65$city))
+food_data65 <- cbind(food65, county)
+
+food66 <- do.call("rbind", results_list66)
+county <- rep("Benzie", length(food66$city))
+food_data66 <- cbind(food66, county)
+
+food67 <- do.call("rbind", results_list67)
+county <- rep("Missaukee", length(food67$city))
+food_data67 <- cbind(food67, county)
+
+food68 <- do.call("rbind", results_list68)
+county <- rep("Gogebic", length(food68$city))
+food_data68 <- cbind(food68, county)
+
+food69 <- do.call("rbind", results_list69)
+county <- rep("Arenac", length(food69$city))
+food_data69 <- cbind(food69, county)
+
+food70 <- do.call("rbind", results_list70)
+county <- rep("Crawford", length(food70$city))
+food_data70 <- cbind(food70, county)
+
+food71 <- do.call("rbind", results_list71)
+county <- rep("Presque Isle", length(food71$city))
+food_data71 <- cbind(food71, county)
+
+food72 <- do.call("rbind", results_list72)
+county <- rep("Lake", length(food72$city))
+food_data72 <- cbind(food72, county)
+
+food73 <- do.call("rbind", results_list73)
+county <- rep("Iron", length(food73$city))
+food_data73 <- cbind(food73, county)
+
+food74 <- do.call("rbind", results_list74)
+county <- rep("Mackinac", length(food74$city))
+food_data74 <- cbind(food74, county)
+
+food75 <- do.call("rbind", results_list75)
+county <- rep("Alcona", length(food75$city))
+food_data75 <- cbind(food75, county)
+
+food76 <- do.call("rbind", results_list76)
+county <- rep("Montmorency", length(food76$city))
+food_data76 <- cbind(food76, county)
+
+food77 <- do.call("rbind", results_list77)
+county <- rep("Alger", length(food77$city))
+food_data77 <- cbind(food77, county)
+
+food78 <- do.call("rbind", results_list78)
+county <- rep("Baraga", length(food78$city))
+food_data78 <- cbind(food78, county)
+
+food79 <- do.call("rbind", results_list79)
+county <- rep("Oscoda", length(food79$city))
+food_data79 <- cbind(food79, county)
+
+food80 <- do.call("rbind", results_list80)
+county <- rep("Schoolcraft", length(food80$city))
+food_data80 <- cbind(food80, county)
+
+food81 <- do.call("rbind", results_list81)
+county <- rep("Luce", length(food81$city))
+food_data81 <- cbind(food81, county)
+
+food82 <- do.call("rbind", results_list82)
+county <- rep("Ontonagon", length(food82$city))
+food_data82 <- cbind(food82, county)
+
+food83 <- do.call("rbind", results_list83)
+county <- rep("Keweenaw", length(food83$city))
+food_data83 <- cbind(food83, county)
 
 all_establishments <- rbind(
   food_data, food_data2, food_data3, food_data4, food_data5, food_data6,
@@ -733,11 +983,6 @@ all_establishments$categories <- all_establishments$categories %>%
 ```
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Our cleaned data has 1570 observations since the most populated area of certain counties have less than 20 food establishment options on Yelp.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The data from Yelp provides us information regarding location (city, state, longtitude, latitude). However, we are interested in studying counties within the state of Michigan. Thus, we will create an object that will map the food establishment's city to its associated county.
-```{r}
-
-```
 
 _Obesity Data_
 
