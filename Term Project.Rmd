@@ -602,7 +602,7 @@ all_establishments <- rbind(
   food_data79, food_data80, food_data81, food_data82, food_data83)
 ```
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;One of the columns of interest in our dataset (all_establishments), 'categories', requires some clean-up with formatting. Thus, we will reformat that column in order to make it more understandable and clear.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;One of the columns of interest in our dataset (all_establishments), 'categories', requires some clean-up with formatting. Additionally, we will need to place the categories into new appropriate buckets to make analysis relevant. Thus, we will reformat that column in order to make it more understandable and clear.
 
 ```{r results='hide', message=FALSE, warning=FALSE}
 #clean up data
@@ -746,3 +746,7 @@ _Obesity Data_
 ## Conclusion
 
 ## References
+
+## Link to GitHub Repository
+
+https://github.com/daraeoh/survmeth727
