@@ -925,12 +925,82 @@ all_establishments$categories <- all_establishments$categories %>%
   str_replace_all(., "sandwichesSandwiches", "Delis/Sandwiches") %>%
   str_replace_all(., "pubsPubs", "Bars/Breweries") %>%
   str_replace_all(., "polishPolish", "Misc. European") %>%
-  str_replace_all(., "mediterraneanMediterranean", "Mediterranean/Middle Eastern")
+  str_replace_all(., "mediterraneanMediterranean", "Mediterranean/Middle Eastern") %>%
+  str_replace_all(., "lebaneseLebanese", "Mediterranean/Middle Eastern") %>%
+  str_replace_all(., "steakSteakhouses", "Steakhouses") %>%
+  str_replace_all(., "smokehouseSmokehouse", "Steakhouses") %>%
+  str_replace_all(., "streetvendorsStreet Vendors", "Misc. Asian") %>%
+  str_replace_all(., "saladSalad", "Salad") %>%
+  str_replace_all(., "scandinavianScandinavian", "Misc. European") %>%
+  str_replace_all(., "seafoodSeafood", "Seafood") %>%
+  str_replace_all(., "seafoodmarketsSeafood Markets", "Seafood") %>%
+  str_replace_all(., "wrapsWraps", "Delis/Sandwiches") %>%
+  str_replace_all(., "venezuelanVenezuelan", "Latin/Spanish") %>%
+  str_replace_all(., "veganVegan", "Vegan/Vegetarian") %>%
+  str_replace_all(., "vegetarianVegetarian", "Vegan/Vegetarian") %>%
+  str_replace_all(., "tapasTapas Bars", "Latin/Spanish") %>%
+  str_replace_all(., "tapasmallplatesTapas/Small Plates", "Latin/Spanish") %>%
+  str_replace_all(., "popuprestaurantsPop-Up Restaurants", "American") %>%
+  str_replace_all(., "latinLatin American", "Latin/Spanish") %>%
+  str_replace_all(., "wine_barsWine Bars", "Bars/Breweries") %>%
+  str_replace_all(., "bagelsBagels", "Delis/Sandwiches") %>%
+  str_replace_all(., "bedbreakfastBed & Breakfast", "Breakfast & Brunch") %>%
+  str_replace_all(., "belgianBelgian", "Misc. European") %>%
+  str_replace_all(., "beerbarBeer Bar", "Bars/Breweries") %>%
+  str_replace_all(., "butcherButcher", "Meat") %>%
+  str_replace_all(., "meatsMeat Shops", "Meat") %>%
+  str_replace_all(., "buffetsBuffets", "Buffets") %>%
+  str_replace_all(., "cajunCajun/Creole", "Cajun/Caribbean") %>%
+  str_replace_all(., "caribbeanCaribbean", "Cajun/Caribbean") %>%
+  str_replace_all(., "cafeteriaCafeteria", "American") %>%
+  str_replace_all(., "chicken_wingsChicken Wings", "Chickens/Wings") %>%
+  str_replace_all(., "chickenshopChicken Shop", "Chickens/Wings") %>%
+  str_replace_all(., "comfortfoodComfort Food", "American") %>%
+  str_replace_all(., "customcakesCustom Cakes", "Cafes/Dessert") %>%
+  str_replace_all(., "cubanCuban", "Latin/Spanish") %>%
+  str_replace_all(., "dinersDiners", "Diners") %>%
+  str_replace_all(., "gluten_freeGluten-Free", "Vegan/Vegetarian") %>%
+  str_replace_all(., "vacation_rentalsVacation Rentals", "Non-restaurant") %>%
+  str_replace_all(., "venuesVenues & Event Spaces", "Non-restaurant") %>%
+  str_replace_all(., "theaterPerforming Arts", "Non-restaurant") %>%
+  str_replace_all(., "souvenirsSouvenir Shops", "Non-restaurant") %>%
+  str_replace_all(., "servicestationsGas Stations", "Non-restaurant") %>%
+  str_replace_all(., "partysuppliesParty Supplies", "Non-restaurant") %>%
+  str_replace_all(., "musicvideoMusic & DVDs", "Non-restaurant") %>%
+  str_replace_all(., "newcanadianCanadian \\(New", "Bars/Breweries") %>%
+  str_replace_all(., "marketsFruits & Veggies", "Fruits & Veggies") %>%
+  str_replace_all(., "importedfoodImported Food", "Misc. European") %>%
+  str_replace_all(., "hotelsHotels", "Non-restaurant") %>%
+  str_replace_all(., "halalHalal", "Mediterranean/Middle Eastern") %>%
+  str_replace_all(., "hairHair Salons", "Non-restaurant") %>%
+  str_replace_all(., "healthmarketsHealth Markets", "Grocery") %>%
+  str_replace_all(., "indonesianIndonesian", "Southeast Asian") %>%
+  str_replace_all(., "indpakIndian", "Indian") %>%
+  str_replace_all(., "himalayanHimalayan/Nepalese", "Misc. Asian") %>%
+  str_replace_all(., "loungesLounges", "Non-restaurant") %>%
+  str_replace_all(., "soulfoodSoul Food", "American") %>%
+  str_replace_all(., "soupSoup", "American") %>%
+  str_replace_all(., "golfGolf", "Non-restaurant") %>%
+  str_replace_all(., "giftshopsGift Shops", "Non-restaurant") %>%
+  str_replace_all(., "gastropubsGastropubs", "Bars/Breweries") %>%
+  str_replace_all(., "foodtrucksFood Trucks", "Mexican") %>%
+  str_replace_all(., "foodstandsFood Stands", "American") %>%
+  str_replace_all(., "flowersFlowers & Gifts", "Non-restaurant") %>%
+  str_replace_all(., "farmersmarketFarmers Market", "Grocery") %>%
+  str_replace_all(., "drugstoresDrugstores", "Grocery") %>%
+  str_replace_all(., "deptstoresDepartment Stores", "Grocery") %>%
+  str_replace_all(., "convenienceConvenience Stores", "Grocery") %>%
+  str_replace_all(., "cateringCaterers", "American") %>%
+  str_replace_all(., "brazilianBrazilian", "Latin/Spanish") %>%
+  str_replace_all(., "bowlingBowling", "Non-restaurant") %>%
+  str_replace_all(., "bookstoresBookstores", "Non-restaurant") %>%
+  str_replace_all(., "gourmetSpecialty Food", "Other") %>%
+  str_replace_all(., "restaurantsRestaurants", "Other") 
 ```
 
-str_replace_all(., "", "") %>%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Our cleaned data has 1570 observations since the most populated area of certain counties have less than 20 food establishment options on Yelp.
+str_replace_all(., "", "") %>%str_replace_all(., "", "") %>%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Our cleaned data has 1570 observations since the most populated area of certain counties have less than 20 food establishment options on Yelp.
 
-str_replace_all(., "", "") %>%_Obesity Data_
+str_replace_all(., "", "") %>%str_replace_all(., "", "") %>%_Obesity Data_
 
 ## Results (e.g.  graphs, exploratory analysis)
 
