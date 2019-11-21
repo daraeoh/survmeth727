@@ -998,9 +998,9 @@ all_establishments$categories <- all_establishments$categories %>%
   str_replace_all(., "restaurantsRestaurants", "Other") 
 ```
 
-str_replace_all(., "", "") %>%str_replace_all(., "", "") %>%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Our cleaned data has 1570 observations since the most populated area of certain counties have less than 20 food establishment options on Yelp.
+%>%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Our cleaned data has 1570 observations since the most populated area of certain counties have less than 20 food establishment options on Yelp.
 
-str_replace_all(., "", "") %>%str_replace_all(., "", "") %>%_Obesity Data_
+_Obesity Data_
 
 ## Results (e.g.  graphs, exploratory analysis)
 
