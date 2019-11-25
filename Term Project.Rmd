@@ -1,17 +1,41 @@
 ---
 title: "Food For Thought"
 author: "Rebecca Oh, Alexa Zmich"
-date: "December 2019"
+date: "November 25, 2019"
 output:
-  pdf_document: default
-  html_document:
-    df_print: paged
+  pdf_document: 
+    toc: yes
 subtitle: SURVMETH 727 Term Project
 geometry: margin=0.75in
+references:
+- id: Wickham2014
+  title: Tidy Data
+  author:
+  - family: Wickham
+    given: Hadley
+  container-title: Journal of Statistical Software
+  volume: 59
+  issue: 10
+  page: 1-23
+  type: article-journal
+  issued:
+    year: 2014
+- id: Baumer2017
+  title: Modern Data Science with R
+  author:
+  - family: Baumer
+    given: Benjamin S.
+  - family: Kaplan
+    given: Daniel T.
+  - family: Horton
+    given: Nicholas J.
+  type: book
+  publisher: Chapman \& Hall/CRC Press.
+  issued:
+    year: 2017
 ---
 
-## Setup
-```{r message=FALSE, warning=FALSE}
+```{r, include = FALSE}
 library(yelpr)
 library(knitr)
 library(markdown)
@@ -25,11 +49,13 @@ library(noncensus)
 
 ## Introduction
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(note from Christoph: This section outlines the research idea. We can also cite related work here [@Wickham2014; @Baumer2017].)
+
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Rising obesity rates in the United States have become a large concern, as obesity is now the leading preventable cause of death worldwide and is associated with many other causes of death. The dietary choices we make every day affect the potential of developing obesity, including the types of food establishments we choose to eat at. Thus, we are interested in seeing the possible effect these food establishments can have on our health, leading to our research question: “Is there a correlation between the main cuisines of food establishments and obesity rates within each Michigan county?”
 
-## Methods
+## Data
 
-_Cuisines and Counties Data_
+### _Cuisines and Counties Data_
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In order to answer our main research question, we will first need to gather data regarding main cuisines in Michigan counties. We will will need Yelp API access. We have chosen Yelp as our data gathering source, as it stores information regarding restaurant name, cuisine type, and location, which we will later use to test for correlation against obesity. We will store Yelp's API key as an object, and we will use this object in the following API queries to ultimately form our dataset.
 
@@ -46,13 +72,58 @@ res <- POST("https://api.yelp.com/oauth2/token",
 token <- content(res)$access_token
 ```
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In terms of data gathering, the Yelp API does not support gathering data by searching a whole county for the U.S.; it obligates us to search a city. Additionally, the API has a limit of 50 queries. Thus, we collected the top 20 most popular food establishments of (or near) the most populated city of each of the 83 counties (indicated in the commented code below) in the state of Michigan. We will search with "food" as the term of interest and the "location" as the most populated area within the specific county. Then, we will append all 83 datasets to have a full dataset of the most popular food establishments, cuisine type of each food establishment, and city (or nearby city) of each food establishment for the state of Michigan.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In terms of data gathering, the Yelp API does not support gathering data by searching a whole county for the U.S.; it obligates us to search a city. Additionally, the API has a limit of 50 queries. Thus, we will collect the top 20 most popular food establishments of (or near) the most populated city of each of the 83 counties in the state of Michigan. We will search with "food" as the term of interest and the "location" as the most populated area within the specific county. Then, we will append all 83 datasets to have a full dataset of the most popular food establishments, cuisine type of each food establishment, and city (or nearby city) of each food establishment for the state of Michigan.
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The data from Yelp provides us information regarding location (city, state, longtitude, latitude). However, we are interested in studying counties within the state of Michigan. Thus, we will create an object that will provide us with the food establishment's county, mapped from its corresponding city.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The data from Yelp provides us information regarding location (city, state, longtitude, latitude). However, we are interested in studying counties within the state of Michigan. Thus, we will create an object that will provide us with the food establishment's county, mapped from its corresponding city. We will show an example of this using Wayne County.
 
 ```{r}
 #search url and collect data per county
 yelp <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=detroit+MI" #wayne
+url <- modify_url(yelp, path = c("v3", "businesses", "search"))
+res <- GET(url, add_headers('Authorization' = paste("bearer", client_secret)))
+results <- content(res)
+
+#parse data
+yelp_httr_parse <- function(x) {
+
+  parse_list <- list(id = x$id, 
+                     name = x$name, 
+                     categories = x$categories, 
+                     rating = x$rating, 
+                     review_count = x$review_count, 
+                     latitude = x$coordinates$latitude, 
+                     longitude = x$coordinates$longitude, 
+                     address1 = x$location$address1, 
+                     city = x$location$city, 
+                     state = x$location$state, 
+                     distance = x$distance)
+  
+  parse_list <- lapply(parse_list, FUN = function(x) ifelse(is.null(x), "", x))
+  
+  df <- tibble(id=parse_list$id,
+                   name=parse_list$name, 
+                   categories = parse_list$categories, 
+                   rating = parse_list$rating, 
+                   review_count = parse_list$review_count, 
+                   latitude=parse_list$latitude, 
+                   longitude = parse_list$longitude, 
+                   address1 = parse_list$address1, 
+                   city = parse_list$city, 
+                   state = parse_list$state, 
+                   distance= parse_list$distance)
+  df
+}
+
+results_list <- lapply(results$businesses, FUN = yelp_httr_parse)
+food <- do.call("rbind", results_list)
+county <- rep("Wayne",length(food$city))
+food_data <- cbind(food, county)
+```
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Now, this process will be repeated for the remaining 82 counties of Michigan.
+
+```{r, include = FALSE}
+#search url and collect data per county
 yelp2 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=troy+MI" #oakland
 yelp3 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=warren+MI" #macomb
 yelp4 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=grand+rapids+MI" #kent
@@ -136,7 +207,6 @@ yelp81 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&t
 yelp82 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=ontonagon+MI" #ontonagon
 yelp83 <- "https://api.yelp.com/v3/businesses/search/?limit=20&offset=0&sort=0&term=food&location=ahmeek+MI" #keweenaw
 
-url <- modify_url(yelp, path = c("v3", "businesses", "search"))
 url2 <- modify_url(yelp2, path = c("v3", "businesses", "search"))
 url3 <- modify_url(yelp3, path = c("v3", "businesses", "search"))
 url4 <- modify_url(yelp4, path = c("v3", "businesses", "search"))
@@ -220,7 +290,6 @@ url81 <- modify_url(yelp81, path = c("v3", "businesses", "search"))
 url82 <- modify_url(yelp82, path = c("v3", "businesses", "search"))
 url83 <- modify_url(yelp83, path = c("v3", "businesses", "search"))
 
-res <- GET(url, add_headers('Authorization' = paste("bearer", client_secret)))
 res2 <- GET(url2, add_headers('Authorization' = paste("bearer", client_secret)))
 res3 <- GET(url3, add_headers('Authorization' = paste("bearer", client_secret)))
 res4 <- GET(url4, add_headers('Authorization' = paste("bearer", client_secret)))
@@ -304,7 +373,6 @@ res81 <- GET(url81, add_headers('Authorization' = paste("bearer", client_secret)
 res82 <- GET(url82, add_headers('Authorization' = paste("bearer", client_secret)))
 res83 <- GET(url83, add_headers('Authorization' = paste("bearer", client_secret)))
 
-results <- content(res)
 results2 <- content(res2)
 results3 <- content(res3)
 results4 <- content(res4)
@@ -419,7 +487,6 @@ yelp_httr_parse <- function(x) {
   df
 }
 
-results_list <- lapply(results$businesses, FUN = yelp_httr_parse)
 results_list2 <- lapply(results2$businesses, FUN = yelp_httr_parse)
 results_list3 <- lapply(results3$businesses, FUN = yelp_httr_parse)
 results_list4 <- lapply(results4$businesses, FUN = yelp_httr_parse)
@@ -502,10 +569,6 @@ results_list80 <- lapply(results80$businesses, FUN = yelp_httr_parse)
 results_list81 <- lapply(results81$businesses, FUN = yelp_httr_parse)
 results_list82 <- lapply(results82$businesses, FUN = yelp_httr_parse)
 results_list83 <- lapply(results83$businesses, FUN = yelp_httr_parse)
-
-food <- do.call("rbind", results_list)
-county <- rep("Wayne",length(food$city))
-food_data <- cbind(food, county)
 
 food2 <- do.call("rbind", results_list2)
 county <- rep("Oakland", length(food2$city))
@@ -834,7 +897,11 @@ food_data82 <- cbind(food82, county)
 food83 <- do.call("rbind", results_list83)
 county <- rep("Keweenaw", length(food83$city))
 food_data83 <- cbind(food83, county)
+```
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Then, in order to have one dataset that merges all 83 counties of Michigan, we will append as follows, and call our final dataset for cuisines and counties "all_establishments":
+
+```{r}
 #append 83 datasets
 all_establishments <- rbind(
   food_data, food_data2, food_data3, food_data4, food_data5, food_data6,
@@ -853,9 +920,9 @@ all_establishments <- rbind(
   food_data79, food_data80, food_data81, food_data82, food_data83)
 ```
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;One of the columns of interest in our dataset (all_establishments), 'categories', requires some clean-up with formatting. Additionally, we will need to place the categories into new appropriate buckets to make analysis relevant. Thus, we will reformat that column in order to make it more understandable and clear.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;One of the columns of interest in all_establishments, 'categories', requires some clean-up with formatting. Additionally, we will need to place the categories into new appropriate buckets to make analysis relevant. Thus, we will reformat that column in order to make it more understandable and clear. We show a few examples of classifying 'categories' in the following chunk:
 
-```{r results='hide', message=FALSE, warning=FALSE}
+```{r, warning = FALSE}
 #clean up 'categories'
 all_establishments$categories <- all_establishments$categories %>%
   str_replace_all(., "list\\(alias = ", "") %>%
@@ -864,7 +931,13 @@ all_establishments$categories <- all_establishments$categories %>%
   str_replace_all(., "\"", "") %>%
   str_replace_all(., "burgersBurgers", "American") %>%
   str_replace_all(., "newamericanAmerican \\(New", "American") %>%
-  str_replace_all(., "beergardensBeer Gardens", "Bars/Breweries") %>%
+  str_replace_all(., "beergardensBeer Gardens", "Bars/Breweries")
+```
+
+
+```{r, include = FALSE}
+#clean up the remainder of 'categories'
+all_establishments$categories <- all_establishments$categories %>%
   str_replace_all(., "barsBars", "Bars/Breweries") %>%
   str_replace_all(., "bakeriesBakeries", "Cafes/Dessert") %>%
   str_replace_all(., "african", "") %>%
@@ -998,16 +1071,33 @@ all_establishments$categories <- all_establishments$categories %>%
   str_replace_all(., "restaurantsRestaurants", "Other") 
 ```
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Our cleaned data has 1570 observations since the most populated area of certain counties have less than 20 food establishment options on Yelp.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Our initially cleaned dataset of cuisines and counties (all_establishments) has 1570 observations since the most populated area of certain counties have less than 20 food establishment options on Yelp. However, we have noticed that more data-cleaning may be required. For instance, Yelp has captured establishments that are not helpful with comparing against obesity (i.e. bowling). We have grouped these establishments into a category called "Non-restaurant." Grocery stores ("Grocery" in our dataset) are also more difficult to predict how dietary choices in counties affect obesity since we cannot speculate if a consumer made a healthy or an unhealthy choice at the specific grocery store. Lastly, we had a small group of establishments that did not fit into any categories, so we placed them in a category we called "Other." As these three categories may not be very useful in our analysis, we will remove them from our dataset, shown below.
 
-_Obesity Data_
+```{r}
+#code that removes the three bad categories. too lazy to write the code now so i'm just 
+#creating a comment lol.
+```
 
-## Results (e.g.  graphs, exploratory analysis)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;After removing the "Non-restaurant", "Grocery", and "Other" categories from all_establishments, our final dataset of cuisines and counties includes __ observations.
 
-## Conclusion
+### _Obesity Data_
 
-## References
+## Results
+
+### _Data exploration_
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Christoph: The results section may have a data exploration part, but in general the structure here depends on the specific project.
+
+### _Analysis_
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Christoph: This section presents the main results, such as (for example) stats and graphs that show relationships, model results and/or clustering, PCA, etc.
+
+## Discussion
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Christoph: This section summarizes the results and may briefly outline advantages and limitations of the work presented.
 
 ## Link to GitHub Repository
 
 https://github.com/daraeoh/survmeth727
+
+## References
