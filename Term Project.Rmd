@@ -1074,11 +1074,13 @@ all_establishments$categories <- all_establishments$categories %>%
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Our initially cleaned dataset of cuisines and counties (all_establishments) has 1570 observations since the most populated area of certain counties have less than 20 food establishment options on Yelp. However, we have noticed that more data-cleaning may be required. For instance, Yelp has captured establishments that are not helpful with comparing against obesity (i.e. bowling). We have grouped these establishments into a category called "Non-restaurant." Grocery stores ("Grocery" in our dataset) are also more difficult to predict how dietary choices in counties affect obesity since we cannot speculate if a consumer made a healthy or an unhealthy choice at the specific grocery store. Lastly, we had a small group of establishments that did not fit into any categories, so we placed them in a category we called "Other." As these three categories may not be very useful in our analysis, we will remove them from our dataset, shown below.
 
 ```{r}
-#code that removes the three bad categories. too lazy to write the code now so i'm just 
-#creating a comment lol.
+all_establishments <- all_establishments %>% 
+  filter(!categories == "Non-restaurant") %>%
+  filter(!categories == "Grocery") %>%
+  filter(!categories == "Other")
 ```
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;After removing the "Non-restaurant", "Grocery", and "Other" categories from all_establishments, our final dataset of cuisines and counties includes __ observations.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;After removing the "Non-restaurant", "Grocery", and "Other" categories from all_establishments, our final dataset of cuisines and counties includes 1480 unique observations.
 
 ### _Obesity Data_
 
