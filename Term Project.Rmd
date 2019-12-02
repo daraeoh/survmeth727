@@ -1084,7 +1084,10 @@ all_establishments <- all_establishments %>%
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;After removing the "Non-restaurant", "Grocery", and "Other" categories from all_establishments, our final dataset of cuisines and counties includes 1480 unique observations.
 
 ### _Obesity Data_
+
+```{r}
 obesity <- read_csv("https://raw.githubusercontent.com/daraeoh/survmeth727/master/Obesity%20Michigan%20County%20Level%20Data.csv")
+```
 
 ## Results
 
