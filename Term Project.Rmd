@@ -1085,8 +1085,16 @@ all_establishments <- all_establishments %>%
 
 ### _Obesity Data_
 
-```{r}
+```{r, warning = FALSE}
 obesity <- read_csv("https://raw.githubusercontent.com/daraeoh/survmeth727/master/Obesity%20Michigan%20County%20Level%20Data.csv")
+```
+
+### _Master Data_
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Now that we have gathered both the Cuisines and Counties Data and the Obesity Data, we will merge them together by "county" to get our master spreadsheet for analysis.
+
+```{r}
+master <-inner_join(all_establishments, obesity, by = "county")
 ```
 
 ## Results
