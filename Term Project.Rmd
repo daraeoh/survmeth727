@@ -1103,7 +1103,7 @@ all_establishments %>% mutate_if(is.factor, as.character) -> all_establishments
 
 ### _Obesity Data_
 
-```{r, warning = FALSE}
+```{r, eval = FALSE}
 obesity <- read_csv("https://raw.githubusercontent.com/daraeoh/survmeth727/master/obesity.csv")
 ```
 
