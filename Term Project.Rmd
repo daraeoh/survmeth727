@@ -1109,7 +1109,58 @@ master <-inner_join(all_establishments, avg_obesity, by = "county")
 
 ### _Data Exploration_
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Christoph: The results section may have a data exploration part, but in general the structure here depends on the specific project.
+```{r}
+#basic barplot
+ggplot(master) + 
+  geom_bar(aes(x = categories)) + 
+  labs(
+    x = "Cuisine Category", 
+    y = "Frequency", 
+    title = "Frequency of Cuisine Categories on Yelp"
+    ) + 
+  coord_flip()
+```
+
+```{r fig.height = 10, fig.width = 10}
+#male obesity barplot by county
+male <- aggregate(
+  male_obesity_prevalence_percent ~ county, master, mean) %>%
+  arrange(desc(male_obesity_prevalence_percent))
+male_plot <- ggplot(male, 
+                    aes(x = reorder(county, male_obesity_prevalence_percent), 
+                        y = male_obesity_prevalence_percent)) + 
+  geom_bar(
+    stat = "identity", 
+    color = 'skyblue', 
+    fill = 'steelblue') + 
+  labs(
+    x = "County", 
+    y = "Male Obesity Percent", 
+    title = "Male Obesity Percent by County"
+    ) +
+  coord_flip()
+
+#female obesity barplot by county
+female <- aggregate(
+  female_obesity_prevalence_percent ~ county, master, mean) %>%
+  arrange(desc(female_obesity_prevalence_percent))
+female_plot <- ggplot(female, 
+                    aes(x = reorder(county, female_obesity_prevalence_percent), 
+                        y = female_obesity_prevalence_percent)) + 
+  geom_bar(
+    stat = "identity", 
+    color = 'lightpink', 
+    fill = 'pink') + 
+  labs(
+    x = "", 
+    y = "Female Obesity Percent", 
+    title = "Female Obesity Percent by County"
+    ) +
+  coord_flip()
+
+#print male and female obesity barplots
+grid.arrange(male_plot, female_plot, ncol = 2)
+```
 
 ```{r}
 #top 10 food categories arranged by highest average 'obesity_avg'
@@ -1125,10 +1176,6 @@ top_counties <- aggregate(
   obesity_avg ~ county, master, mean) %>%
   arrange(desc(obesity_avg))
 head(top_counties, 10)
-```
-
-```{r}
-
 ```
 
 ### _Analysis_
