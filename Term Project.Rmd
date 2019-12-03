@@ -59,7 +59,6 @@ library(ggplot2)
 library(Hmisc)
 library(gridExtra)
 library(broom)
-library(ggvis)
 ```
 
 ## Introduction
@@ -1260,29 +1259,45 @@ master %>%
   tidy()
 ```
 
-```{r}
-#aggregate rate of obesity for top 10 county categories arranged by 
-#highest average aggregate rate of obesity segmented by cuisine categories
+```{r fig.height = 10, fig.width = 13}
+#aggregate rate of obesity plot by county
+countyobes <- aggregate(
+  obesity_avg ~ county, master, mean) %>%
+  arrange(desc(obesity_avg))
+county_plot <- ggplot(countyobes, 
+                    aes(x = reorder(county, obesity_avg), 
+                        y = obesity_avg)) + 
+  geom_bar(
+    stat = "identity", 
+    color = 'violet', 
+    fill = 'purple') + 
+  labs(
+    x = "County", 
+    y = "Aggregate Rate of Obesity (%)", 
+    title = "Aggregate Rate of Obesity by County"
+    ) +
+  coord_flip()
 
-master %>%
-  ggvis(x = ~categories, y = ~obesity_avg, fill = ~county) %>%
-  layer_points(data = subset(master, county == "Saginaw"), fill = ~"Saginaw") %>%
-  layer_points(data = subset(master, county == "Genesee"), fill = ~"Genesee") %>%
-  layer_points(data = subset(master, county == "Lake"), fill = ~"Lake") %>%
-  layer_points(data = subset(master, county == "Gratiot"), fill = ~"Gratiot") %>%
-  layer_points(data = subset(master, county == "Ionia"), fill = ~"Ionia") %>%
-  layer_points(data = subset(master, county == "Calhoun"), fill = ~"Calhoun") %>%
-  layer_points(data = subset(master, county == "Arenac"), fill = ~"Arenac") %>%
-  layer_points(data = subset(master, county == "Monroe"), fill = ~"Monroe") %>%
-  layer_points(data = subset(master, county == "Oceana"), fill = ~"Oceana") %>%
-  layer_points(data = subset(master, county == "Wayne"), fill = ~"Wayne") %>%
-  add_axis("y", title_offset = 40, title = "Aggregate Rate of Obesity (%)") %>%
-  add_axis("x", title_offset = 40, title = "", properties = axis_props(
-    labels = list(
-      angle = 270, 
-      align = "right"),
-      title = list(fontSize = 15))) %>%
-  add_legend("fill", title = "Top 10 Counties with Highest Average Aggregate Rate of Obesity") 
+#aggregate rate of obesity plot by cuisine category
+catobes <- aggregate(
+  obesity_avg ~ categories, master, mean) %>%
+  arrange(desc(obesity_avg))
+categories_plot <- ggplot(catobes, 
+                    aes(x = reorder(categories, obesity_avg), 
+                        y = obesity_avg)) + 
+  geom_bar(
+    stat = "identity", 
+    color = 'green', 
+    fill = 'darkgreen') + 
+  labs(
+    x = "Cuisine Category", 
+    y = "Aggregate Rate of Obesity (%)", 
+    title = "Aggregate Rate of Obesity by Cuisine Category"
+    ) +
+  coord_flip()
+
+#print both plots
+grid.arrange(county_plot, categories_plot, ncol = 2)
 ```
 
 ## Discussion
