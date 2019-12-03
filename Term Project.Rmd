@@ -1103,7 +1103,7 @@ all_establishments %>% mutate_if(is.factor, as.character) -> all_establishments
 
 ### _Obesity Data_
 
-```{r, eval = FALSE}
+```{r, message = FALSE}
 obesity <- read_csv("https://raw.githubusercontent.com/daraeoh/survmeth727/master/obesity.csv")
 ```
 
@@ -1182,7 +1182,7 @@ female_plot <- ggplot(female,
 grid.arrange(male_plot, female_plot, ncol = 2)
 ```
 
-```{r, eval = FALSE}
+```{r, results = "hide"}
 #top 10 cuisine categories arranged by highest average aggregate rate of obesity
 top_categories <- aggregate(
   obesity_avg ~ categories, master, mean) %>%
@@ -1204,7 +1204,7 @@ Salad	| 38.63462
 Delis/Sandwiches	| 38.51750		
 Bars/Breweries	| 38.44529	
 
-```{r, eval = FALSE}
+```{r, results = "hide"}
 #top 10 counties arranged by highest average aggregate rate of obesity
 top_counties <- aggregate(
   obesity_avg ~ county, master, mean) %>%
