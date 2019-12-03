@@ -1109,6 +1109,8 @@ all_establishments %>% mutate_if(is.factor, as.character) -> all_establishments
 obesity <- read_csv("https://raw.githubusercontent.com/daraeoh/survmeth727/master/obesity.csv")
 ```
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;We took the average of the male and female obesity rates and created a new column called “obesity_avg” as our dependent variable of interest, as shown below. We will refer to this variable as “aggregate rate of obesity.”
+
 ```{r}
 obesity_avg <- 
   (obesity$female_obesity_prevalence_percent + obesity$male_obesity_prevalence_percent) / 2
@@ -1131,6 +1133,8 @@ master <-inner_join(all_establishments, avg_obesity, by = "county")
 
 ### _Data Exploration_
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In our exploratory analysis, we created a basic barplot for `categories` to get an idea of the prevalence of different types of the most popular cuisines on Yelp in the state of Michigan.
+
 ```{r}
 #basic barplot
 ggplot(master) + 
@@ -1142,6 +1146,10 @@ ggplot(master) +
     ) + 
   coord_flip()
 ```
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;According to our barplot, American, Bars/Breweries, Cafes/Dessert, and Pizza are the most popular types of cuisines on Yelp for Michigan.
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Additionally, [blah blah blah talk about the male/female plots]
 
 ```{r fig.height = 10, fig.width = 10}
 #male obesity barplot by county
@@ -1184,6 +1192,8 @@ female_plot <- ggplot(female,
 grid.arrange(male_plot, female_plot, ncol = 2)
 ```
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Next, we were interested in observing the top cuisine categories with the highest values of average aggregate rate of obesity. In order to obtain these statistics, we first found the mean percentage of aggregate rate of obesity for each cuisine category. When we listed the top ten cuisine categories with the largest percentage of aggregate rate of obesity, we found that African, Fruits & Veggies, Diners, Chinese, and Indian cuisines were among the cuisine categories that yielded the highest obesity rates, as shown in the table below.
+
 ```{r, results = "hide"}
 #top 10 cuisine categories arranged by highest average aggregate rate of obesity
 top_categories <- aggregate(
@@ -1195,16 +1205,18 @@ head(top_categories, 10)
 <!-- Table of top 10 cuisine categories arranged by highest average aggregate rate of obesity -->
 Cuisine Categories | Average Aggregate Rate of Obesity (%)
 ------------------ | -------------------------------------
-African | 40.45000
+African	| 40.87500		
 Fruits & Veggies	| 39.97500		
-Chinese	| 39.30417		
-Diners	| 39.23810		
+Diners	| 39.26017		
+Chinese	| 39.07273		
 Indian	| 38.99000		
 Buffets	| 38.98750		
-Pizza	| 38.70844		
-Salad	| 38.63462		
-Delis/Sandwiches	| 38.51750		
-Bars/Breweries	| 38.44529	
+Salad	| 38.92727		
+Pizza	| 38.65570		
+Delis/Sandwiches	| 38.59150		
+Seafood	| 38.58125	
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Similarly, we were interested in observing the top counties with the highest values of average aggregate rate of obesity, so we first found the mean percentage of aggregate rate of obesity for each county and listed the top ten counties with the largest percentage of aggregate rate of obesity. These counties are listed in the table below.
 
 ```{r, results = "hide"}
 #top 10 counties arranged by highest average aggregate rate of obesity
