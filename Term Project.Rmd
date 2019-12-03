@@ -46,6 +46,7 @@ library(tidyverse)
 library(stringr)
 library(noncensus)
 library(readr)
+library(dplyr)
 ```
 
 ## Introduction
@@ -1069,7 +1070,8 @@ all_establishments$categories <- all_establishments$categories %>%
   str_replace_all(., "bowlingBowling", "Non-restaurant") %>%
   str_replace_all(., "bookstoresBookstores", "Non-restaurant") %>%
   str_replace_all(., "gourmetSpecialty Food", "Other") %>%
-  str_replace_all(., "restaurantsRestaurants", "Other") 
+  str_replace_all(., "restaurantsRestaurants", "Other") %>%
+  str_replace_all(., "arcadesArcades", "Other")
 ```
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Our initially cleaned dataset of cuisines and counties (all_establishments) has 1570 observations since the most populated area of certain counties have less than 20 food establishment options on Yelp. However, we have noticed that more data-cleaning may be required. For instance, Yelp has captured establishments that are not helpful with comparing against obesity (i.e. bowling). We have grouped these establishments into a category called "Non-restaurant." Grocery stores ("Grocery" in our dataset) are also more difficult to predict how dietary choices in counties affect obesity since we cannot speculate if a consumer made a healthy or an unhealthy choice at the specific grocery store. Lastly, we had a small group of establishments that did not fit into any categories, so we placed them in a category we called "Other." As these three categories may not be very useful in our analysis, we will remove them from our dataset, shown below.
@@ -1086,22 +1088,48 @@ all_establishments <- all_establishments %>%
 ### _Obesity Data_
 
 ```{r, warning = FALSE}
-obesity <- read_csv("https://raw.githubusercontent.com/daraeoh/survmeth727/master/Obesity%20Michigan%20County%20Level%20Data.csv")
+obesity <- read_csv("https://raw.githubusercontent.com/daraeoh/survmeth727/master/obesity.csv")
+```
+
+```{r}
+obesity_avg <- 
+  (obesity$female_obesity_prevalence_percent + obesity$male_obesity_prevalence_percent) / 2
+avg_obesity <- cbind(obesity, obesity_avg)
 ```
 
 ### _Master Data_
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Now that we have gathered both the Cuisines and Counties Data and the Obesity Data, we will merge them together by "county" to get our master spreadsheet for analysis.
 
-```{r}
-master <-inner_join(all_establishments, obesity, by = "county")
+```{r, warning = FALSE}
+master <-inner_join(all_establishments, avg_obesity, by = "county")
 ```
 
 ## Results
 
-### _Data exploration_
+### _Data Exploration_
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Christoph: The results section may have a data exploration part, but in general the structure here depends on the specific project.
+
+```{r}
+#top 10 food categories arranged by highest average 'obesity_avg'
+top_categories <- aggregate(
+  obesity_avg ~ categories, master, mean) %>%
+  arrange(desc(obesity_avg))
+head(top_categories, 10)
+```
+
+```{r}
+#top 10 counties arranged by highest average 'obesity_avg'
+top_counties <- aggregate(
+  obesity_avg ~ county, master, mean) %>%
+  arrange(desc(obesity_avg))
+head(top_counties, 10)
+```
+
+```{r}
+
+```
 
 ### _Analysis_
 
