@@ -1233,7 +1233,7 @@ model1 <- lm(obesity_avg ~ factor(categories), data = master)
 summary(model1)
 ```
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The R-squared value of our preliminary model was quite low (0.048), indicating poor model fit. To improve upon the model, we added county to the same model as above.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The R-squared value of our preliminary model was quite low (R-squared = 0.048), indicating poor model fit. To improve upon the model, we added county to the same model as above.
 
 ```{r}
 #model with 'categories' and 'county' as the predictors
@@ -1248,7 +1248,7 @@ model2 <- lm(obesity_avg ~ factor(categories) + factor(county), data = master)
 summary(model2)
 ```
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The R-squared value of the second model was much higher than the first, indicating a better model fit. Due to this, we decided to make two additional bar plots outlining the aggregate obesity rate by county and cuisine, respectively. We found the bar plots to be an interesting comparison to the results featured in our models.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The R-squared value of the second model was much higher than the first (R-squared = 1), indicating a better model fit. Due to this, we decided to make two additional bar plots outlining the aggregate obesity rate by county and cuisine, respectively. We found the bar plots to be an interesting comparison to the results featured in our models.
 
 ```{r fig.height = 10, fig.width = 13}
 #aggregate rate of obesity plot by county
