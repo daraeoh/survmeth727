@@ -1,38 +1,12 @@
 ---
 title: "Food For Thought"
 author: "Rebecca Oh, Alexa Zmich"
-date: "November 25, 2019"
+date: "December 5, 2019"
 output:
   pdf_document: 
     toc: yes
 subtitle: SURVMETH 727 Term Project
 geometry: margin=0.75in
-references:
-- id: Wickham2014
-  title: Tidy Data
-  author:
-  - family: Wickham
-    given: Hadley
-  container-title: Journal of Statistical Software
-  volume: 59
-  issue: 10
-  page: 1-23
-  type: article-journal
-  issued:
-    year: 2014
-- id: Baumer2017
-  title: Modern Data Science with R
-  author:
-  - family: Baumer
-    given: Benjamin S.
-  - family: Kaplan
-    given: Daniel T.
-  - family: Horton
-    given: Nicholas J.
-  type: book
-  publisher: Chapman \& Hall/CRC Press.
-  issued:
-    year: 2017
 ---
 
 ```{r, include = FALSE}
@@ -63,15 +37,15 @@ library(broom)
 
 ## Introduction
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(note from Christoph: This section outlines the research idea. We can also cite related work here [@Wickham2014; @Baumer2017].)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Rising obesity rates in the United States have become a large concern, as obesity is now the leading preventable cause of death worldwide and is associated with many other causes of death. The dietary choices we make every day affect the potential of developing obesity, including the types of food establishments we choose to eat at. Thus, we are interested in seeing the possible effect these food establishments can have on our health, leading to our research question: “Do the main cuisines of food establishments affect obesity rates within Michigan?” In our study, we additionally seek to delve further into this question by analyzing geographic location (by county), which may also be impacting the obesity rates.
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Rising obesity rates in the United States have become a large concern, as obesity is now the leading preventable cause of death worldwide and is associated with many other causes of death. The dietary choices we make every day affect the potential of developing obesity, including the types of food establishments we choose to eat at. Thus, we are interested in seeing the possible effect these food establishments can have on our health, leading to our research question: “Is there a correlation between the main cuisines of food establishments and obesity rates within each Michigan county?”
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Prior research for obesity is heavily focused on fast food restaurants specifically. Studies have found that the location of fast food reference, in regards to both quantity and closeness to heavily frequented buildings (i.e. schools), can have a significant effect on the obesity rates in the area (Jeffery et al. 2006; Davis and Carpenter 2011). The significance found on location greatly influenced our decision to include a location focus along with our research question, to see if results would be different for non-fast-food restaurants. Currie et al. (2010) separated fast food restaurants from non-fast-food restaurants and found there to be a lack of correlation between non-fast-food restaurants and obesity, however, the study focused primarily on the fast food restaurants and did not further break down the non-fast-food-restaurants due to the initial lack of correlation. Our research question will continue research into a much needed focus on non-fast-food-restaurants, especially as Yelp tends to lack full inclusion of area fast food restaurants.
 
 ## Data
 
 ### _Cuisines and Counties Data_
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In order to answer our main research question, we will first need to gather data regarding main cuisines in Michigan counties. We will will need Yelp API access. We have chosen Yelp as our data gathering source, as it stores information regarding restaurant name, cuisine type, and location, which we will later use to test for correlation against obesity. We will store Yelp's API key as an object, and we will use this object in the following API queries to ultimately form our dataset.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In order to answer our main research question, we first needed to gather data regarding main cuisines in Michigan counties. We chose Yelp as our data gathering source, as it stores key restaurant information beyond the restaurant name, such as cuisine type and location, which will be used to test for significant effects against obesity. After gaining access to Yelp API, we stored the key as an object to be used in the following API queries that ultimately formed our data set.
 
 ```{r}
 #create a token for use with API request
@@ -86,9 +60,9 @@ res <- POST("https://api.yelp.com/oauth2/token",
 token <- content(res)$access_token
 ```
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In terms of data gathering, the Yelp API does not support gathering data by searching a whole county for the U.S.; it obligates us to search a city. Additionally, the API has a limit of 50 queries. Thus, we will collect the top 20 most popular food establishments of (or near) the most populated city of each of the 83 counties in the state of Michigan. We will search with "food" as the term of interest and the "location" as the most populated area within the specific county. Then, we will append all 83 datasets to have a full dataset of the most popular food establishments, cuisine type of each food establishment, and city (or nearby city) of each food establishment for the state of Michigan.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;We encountered a few unexpected challenges with using the Yelp API. Gathering data by searching a whole county within the US is not supported, insisting that users search for a specific city. Additionally, the API has a limit of 50 queries. Thus, we collected the top 20 most popular food establishments within (or near) the most populated city for each of the 83 counties in the state of Michigan. We searched “food” as the term of interest and the location that we searched was the most populated city for each county. Then, we appended all 83 datasets to have a full dataset listing the most popular food establishments, the cuisine type of each establishment, and the city each establishment is located in.
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The data from Yelp provides us information regarding location (city, state, longtitude, latitude). However, we are interested in studying counties within the state of Michigan. Thus, we will create an object that will provide us with the food establishment's county, mapped from its corresponding city. We will show an example of this using Wayne County.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The data from Yelp provide us information regarding location (city, state, longitude, latitude), but lacks county. Since we were ultimately hoping to analyze the data at the county level, we needed to create a new object providing us with this information, by mapping from the establishment’s corresponding city. We will show an example of this using Wayne County:
 
 ```{r}
 #search url and collect data per county
@@ -134,7 +108,7 @@ county <- rep("Wayne",length(food$city))
 food_data <- cbind(food, county)
 ```
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Now, this process will be repeated for the remaining 82 counties of Michigan.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;We then repeated this process for the remaining 82 counties in Michigan.
 
 ```{r, include = FALSE}
 #search url and collect data per county
@@ -913,7 +887,7 @@ county <- rep("Keweenaw", length(food83$city))
 food_data83 <- cbind(food83, county)
 ```
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Then, in order to have one dataset that merges all 83 counties of Michigan, we will append as follows, and call our final dataset for cuisines and counties "all_establishments":
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;To have a complete dataset, we appended as follows, and called our final merged dataset for cuisines and counties: “all _establishments.”
 
 ```{r}
 #append 83 datasets
@@ -934,7 +908,7 @@ all_establishments <- rbind(
   food_data79, food_data80, food_data81, food_data82, food_data83)
 ```
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;One of the columns of interest in all_establishments, 'categories', requires some clean-up with formatting. Additionally, we will need to place the categories into new appropriate buckets to make analysis relevant. Thus, we will reformat that column in order to make it more understandable and clear. We show a few examples of classifying 'categories' in the following chunk:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;One of the columns of interest in “all_establishments,” ‘categories,’ requires some formatting clean-up. The ‘categories’ used by Yelp were very specific, whereas we were hoping to use the more general cuisine types for our analyses. Additionally, we needed to place the categories into new, appropriate buckets to make the analyses relevant. Thus, we reformatted that column in order to make it more understandable and clear. We show a few examples of classifying ‘categories’ in the following chunk:
 
 ```{r, warning = FALSE}
 #clean up 'categories'
@@ -1088,7 +1062,7 @@ all_establishments$categories <- all_establishments$categories %>%
   str_replace_all(., "cheeseCheese Shops", "Other")
 ```
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Our initially cleaned dataset of cuisines and counties (all_establishments) has 1568 observations since the most populated area of certain counties have less than 20 food establishment options on Yelp. However, we have noticed that more data-cleaning may be required. For instance, Yelp has captured establishments that are not helpful with comparing against obesity (i.e. bowling). We have grouped these establishments into a category called "Non-restaurant." Grocery stores ("Grocery" in our dataset) are also more difficult to predict how dietary choices in counties affect obesity since we cannot speculate if a consumer made a healthy or an unhealthy choice at the specific grocery store. Lastly, we had a small group of establishments that did not fit into any categories, so we placed them in a category we called "Other." As these three categories may not be very useful in our analysis, we will remove them from our dataset, shown below.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Our initially cleaned data set of cuisines and counties (all_establisments) had 1568 observations, since the most populated areas of certain counties had less than 20 food establishment options on Yelp. However, when looking through this dataset, we noticed more areas of data-cleaning that needed to be addressed. For instance, Yelp has captured establishments that don’t align with our restaurant-specific analyses (i.e. bowling). We grouped these establishments into a category called “Non-restaurant.” We pre-determined to not include grocery stores (“Grocery” in our dataset) in our analyses as they are a fairly different food establishment type than a restaurant and it can be more difficult to determine the choices a consumer made or the impact those choices will have on their obesity. Lastly, we had a small group of establishments that did not fit into any categories, so we placed them in a category we called “Other.” As these three categories may not be very useful in our analyses, we removed them from our dataset, shown below:
 
 ```{r}
 all_establishments <- all_establishments %>% 
@@ -1097,20 +1071,21 @@ all_establishments <- all_establishments %>%
   filter(!categories == "Other")
 ```
 
-
 ```{r, include = FALSE}
 all_establishments %>% mutate_if(is.factor, as.character) -> all_establishments
 ```
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;After removing the "Non-restaurant", "Grocery", and "Other" categories from all_establishments, our final dataset of cuisines and counties includes 1476 unique observations.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;After removing the "Non-restaurant", "Grocery", and "Other" categories from all_establishments, our final dataset of cuisines and counties includes 1479 unique observations.
 
 ### _Obesity Data_
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Obesity data was collected from the Institute for Health Metrics and Evaluation website, in the form of an Excel file (saved as a CSV) listing counties with both a female and male obesity rate for each county. The file was then uploaded to our Github repository and we read in the raw url file.
 
 ```{r, message = FALSE}
 obesity <- read_csv("https://raw.githubusercontent.com/daraeoh/survmeth727/master/obesity.csv")
 ```
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;We took the average of the male and female obesity rates and created a new column called “obesity_avg” as our dependent variable of interest, as shown below. We will refer to this variable as “aggregate rate of obesity.”
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;We took the average of the male and female obesity rates and created a new column called “obesity_avg” to use as our depended variable of interest, as shown below. We will refer to this variable as “aggregate rate of obesity.”
 
 ```{r}
 obesity_avg <- 
@@ -1124,7 +1099,7 @@ avg_obesity %>% mutate_if(is.factor, as.character) -> avg_obesity
 
 ### _Master Data_
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Now that we have gathered both the Cuisines and Counties Data and the Obesity Data, we will merge them together by "county" to get our master spreadsheet for analysis.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Now that we have gathered both the “cuisine and counties” data set and the “obesity” data set, we merged them together by “county” to get our master dataset (entitled “master”) for analysis.
 
 ```{r, warning = FALSE}
 master <-inner_join(all_establishments, avg_obesity, by = "county")
@@ -1134,7 +1109,7 @@ master <-inner_join(all_establishments, avg_obesity, by = "county")
 
 ### _Data Exploration_
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In our exploratory analysis, we created a basic barplot for `categories` to get an idea of the prevalence of different types of the most popular cuisines on Yelp in the state of Michigan.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In our exploratory analyses, we started by creating a basic barplot for “categories” to get an idea of the prevalence of different types of the most popular cuisines on Yelp for the state of Michigan.
 
 ```{r}
 #basic barplot
@@ -1148,9 +1123,9 @@ ggplot(master) +
   coord_flip()
 ```
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;According to our barplot, American, Bars/Breweries, Cafes/Dessert, and Pizza are the most popular types of cuisines on Yelp for Michigan.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;According to our barplot; American, Bars/Breweries, Cafes/Dessert, and Pizza are the most popular types of cuisine on Yelp for Michigan.
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Additionally, [blah blah blah talk about the male/female plots]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Since the obesity data we collected outlined the obesity rates for both males and females, we were also interested in seeing how the separate sexes obesity rates differed by county. We created bar plots outlining the sex obesity percent rate by county. The bar graphs listed below show that each sex had a fairly different line-up for obesity percent by county.
 
 ```{r fig.height = 10, fig.width = 10}
 #male obesity barplot by county
@@ -1193,7 +1168,7 @@ female_plot <- ggplot(female,
 grid.arrange(male_plot, female_plot, ncol = 2)
 ```
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Next, we were interested in observing the top cuisine categories with the highest values of average aggregate rate of obesity. In order to obtain these statistics, we first found the mean percentage of aggregate rate of obesity for each cuisine category. When we listed the top ten cuisine categories with the largest percentage of aggregate rate of obesity, we found that African, Fruits & Veggies, Diners, Chinese, and Indian cuisines were among the cuisine categories that yielded the highest obesity rates, as shown in the table below.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Next, we were interested in observing the top cuisine categories with the highest values of average aggregate rate of obesity. In order to obtain these statistics, we first found the mean percentage of aggregate rate of obesity for each cuisine category. Then we listed the top ten cuisine categories with the largest percentage of aggregate rate of obesity for each cuisine category. When we listed the top ten cuisine categories with the largest percentage of aggregate rate of obesity, we found that “African,” “Fruits and & Veggies,” “Diners,” “Meat,” and “Indian” cuisines were among the cuisine categories that yielded the highest obesity rates, as shown in the table below. It is worth noting that “African” and “Fruits & Veggies” were both cuisine types with a small sample size, which could be affecting the received results.
 
 ```{r, results = "hide"}
 #top 10 cuisine categories arranged by highest average aggregate rate of obesity
@@ -1208,16 +1183,16 @@ Cuisine Categories | Average Aggregate Rate of Obesity (%)
 ------------------ | -------------------------------------
 African	| 40.87500		
 Fruits & Veggies	| 39.97500		
-Diners	| 39.26017		
-Chinese	| 39.07273		
+Diners	| 39.41268		
+Meat	| 39.00550		
 Indian	| 38.99000		
 Buffets	| 38.98750		
-Salad	| 38.92727		
-Pizza	| 38.65570		
-Delis/Sandwiches	| 38.59150		
-Seafood	| 38.58125	
+Chinese	| 38.93091		
+Pizza	| 38.71260		
+Delis/Sandwiches	| 38.64617		
+Bars/Breweries	| 38.47065	
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Similarly, we were interested in observing the top counties with the highest values of average aggregate rate of obesity, so we first found the mean percentage of aggregate rate of obesity for each county and listed the top ten counties with the largest percentage of aggregate rate of obesity. These counties are listed in the table below.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Similarly, we were interested in observing the top counties with the highest values of average aggregate rate of obesity, so we first found the mean percentage of aggregate rate of obesity for each county and then listed the top ten counties with the largest percentage of aggregate rate of obesity. These counties are listed in the table below:
 
 ```{r, results = "hide"}
 #top 10 counties arranged by highest average aggregate rate of obesity
@@ -1243,7 +1218,7 @@ Wayne	| 41.30
 
 ### _Analysis_
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Christoph: This section presents the main results, such as (for example) stats and graphs that show relationships, model results and/or clustering, PCA, etc.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Based on our data exploration and our research question, we decided to fit linear models to our data to analyze the relationship of the variables we collected on the obesity rates. In order to find the model that best fit our data, we began with a simple approach, modeling the obesity average as our dependent variable against the single “categories” variable.
 
 ```{r}
 #model with 'cateogories' as the only predictor
@@ -1252,12 +1227,28 @@ master %>%
   tidy()
 ```
 
+```{r, results = "hide"}
+#code including R-squared value
+model1 <- lm(obesity_avg ~ factor(categories), data = master)
+summary(model1)
+```
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The R-squared value of our preliminary model was quite low (0.048), indicating poor model fit. To improve upon the model, we added county to the same model as above.
+
 ```{r}
 #model with 'categories' and 'county' as the predictors
 master %>%
   lm(obesity_avg ~ factor(categories) + factor(county), data = .) %>%
   tidy()
 ```
+
+```{r, results = "hide"}
+#code including R-squared value
+model2 <- lm(obesity_avg ~ factor(categories) + factor(county), data = master)
+summary(model2)
+```
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The R-squared value of the second model was much higher than the first, indicating a better model fit. Due to this, we decided to make two additional bar plots outlining the aggregate obesity rate by county and cuisine, respectively. We found the bar plots to be an interesting comparison to the results featured in our models.
 
 ```{r fig.height = 10, fig.width = 13}
 #aggregate rate of obesity plot by county
@@ -1302,10 +1293,22 @@ grid.arrange(county_plot, categories_plot, ncol = 2)
 
 ## Discussion
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Christoph: This section summarizes the results and may briefly outline advantages and limitations of the work presented.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Our first model explored the effect of cuisine on obesity, without including the county variable. This model had poor fit and the variable outputs implied a lack of significance for the effect of cuisine on obesity, with the exception of three cuisine types: “Misc. Asian,” “Misc. European,” and “Vegan/Vegetarian.” Adding county data into the model helped to explain the data in a better manner, as we expected. At a 0.05 threshold for significance, the majority of the cuisine types had a significant effect on the model, with the exception of the following cuisine types: "Buffets," "Cajun/Caribbean," "Mediterranean/Middle Eastern," "Misc. Asian," "Steakhouses," and "Vegan/Vegetarian." All the counties in Michigan, except for Luce county, had a significant effect on obesity. Our results indicate evidence to support the main focus of our research question exploring the effect of cuisine types on obesity rates. Additionally, the strong significance of the county data on the obesity rates reveals potential focus for future data.
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A few limitations are throughout our research. Working with the Yelp API proved to be difficult for our dataset in a few different ways. As Yelp is constantly changing due to user generated input, our results would slightly change as well whenever we would re-run a model. Additionally, the cuisine data was not as concise as we had originally expected, which did lead to small sample sizes for each cuisine type. Though our cuisine types were not significant, future research with much larger sample sizes would still benefit from testing cuisine types to see if different results are received with more available data. Lastly, our model does not include weights, which does not account for the vastly different population sizes of some of the counties and the lack of available restaurants in the smaller counties.
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In addition to the recommendations listed above, future research could benefit from exploring the effect of sex on obesity. Our data exploration found women to generally have higher obesity rates than men. When comparing the “Obesity Percent by County” bar plots for each sex to the “Aggregate Rate of Obesity by County,” the “Aggregate Rate of Obesity by County” bar plot is closer aligned with the female plot than the male plot.  Our research question specifically focused on restaurant and location level data, leading to our decision to not include health and socio-demographic data, as that would alter the focus of our research.
 
 ## Link to GitHub Repository
 
 https://github.com/daraeoh/survmeth727
 
 ## References
+
+Currie, Janet, Stefano DellaVigna, Enrico Moretti, and Vikram Pathania. 2010. "Effect of Fast Food Restaurants on Obesity and Weight Gain."
+
+Davis, Brennan, and Christopher Carpenter. 2011. "Proximity of Fast-Food Restaurants to Schools and Adolescent Obesity."
+
+Institute for Health Metrics and Evaluations. (n.d.). US County Profiles. Retrieved from http://www.healthdata.org/us-county-profiles.
+
+Jeffery, Robert W., Judy Baxter, Maureen McGuire, and Jennifer Linde. 2006. "Are Fast Food Restaurants an Environmental Risk Factor for Obesity?"
