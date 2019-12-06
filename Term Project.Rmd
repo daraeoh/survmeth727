@@ -1220,22 +1220,39 @@ Wayne	| 41.30
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Based on our data exploration and our research question, we decided to fit linear models to our data to analyze the relationship of the variables we collected on the obesity rates. In order to find the model that best fit our data, we began with a simple approach, modeling the obesity average as our dependent variable against the single “categories” variable.
 
-```{r}
+```{r, results = "hide"}
 #model with 'cateogories' as the only predictor
 master %>%
-  lm(obesity_avg ~ factor(categories), data = .) %>%
+  lm(obesity_avg ~ factor(categories), 
+     data = .) %>%
   tidy()
 ```
 
 ```{r, results = "hide"}
 #code including R-squared value
-model1 <- lm(obesity_avg ~ factor(categories), data = master)
+model1 <- lm(obesity_avg ~ factor(categories), 
+             data = master)
 summary(model1)
 ```
 
+<!-- Table replicating model summary output, showing just the estimate and p-values -->
+term | estimate | p.value
+---- | -------- | -------
+(Intercept)	| 40.875000	| 1.654985e-74
+factor(categories)American	| -2.599681	|	2.193781e-01
+factor(categories)Bars/Breweries	| -2.404350	|	2.574884e-01
+factor(categories)Breakfast & Brunch	| -3.141583	|	1.433369e-01
+factor(categories)Buffets	| -1.887500	|	4.653939e-01
+factor(categories)Cafes/Dessert	| -2.473144	|	2.442854e-01
+factor(categories)Cajun/Caribbean	| -2.819444	|	2.271220e-01
+factor(categories)Chickens/Wings	| -3.175000	|	1.698905e-01
+factor(categories)Chinese	| -1.944091	|	3.657209e-01
+factor(categories)Delis/Sandwiches	| -2.228828	|	2.985644e-01
+... with 17 more rows | |
+
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The R-squared value of our preliminary model was quite low (R-squared = 0.048), indicating poor model fit. To improve upon the model, we added county to the same model as above.
 
-```{r}
+```{r, results = "hide"}
 #model with 'categories' and 'county' as the predictors
 master %>%
   lm(obesity_avg ~ factor(categories) + factor(county), data = .) %>%
@@ -1247,6 +1264,32 @@ master %>%
 model2 <- lm(obesity_avg ~ factor(categories) + factor(county), data = master)
 summary(model2)
 ```
+
+<!-- Table replicating model summary output, showing just the estimate and p-values -->
+term | estimate | p.value
+---- | -------- | -------
+(Intercept)	| 3.865000e+01	|	0.000000000
+factor(categories)American	| -1.073765e-13	|	0.021576634
+factor(categories)Bars/Breweries	| -1.340980e-13	|	0.004236776
+factor(categories)Breakfast & Brunch	| -1.164266e-13	|	0.014129448
+factor(categories)Buffets	| -4.075038e-14	|	0.475383464
+factor(categories)Cafes/Dessert	| -1.227356e-13	|	0.009033133
+factor(categories)Cajun/Caribbean	| -8.744369e-14	|	0.090267795
+factor(categories)Chickens/Wings	| -1.355913e-13	|	0.008058154
+factor(categories)Chinese	| -9.941365e-14	|	0.036456553
+factor(categories)Delis/Sandwiches |	-1.062960e-13	|	0.024849817
+... with 17 more rows of cuisine categories | |
+factor(county)Alger	| -5.500000e-01	|	0.000000000
+factor(county)Allegan	| -9.500000e-01	|	0.000000000
+factor(county)Alpena	| -1.700000e+00	|	0.000000000
+factor(county)Antrim	| -3.150000e+00	|	0.000000000
+factor(county)Arenac	| 3.450000e+00	|	0.000000000
+factor(county)Baraga	| 5.500000e-01	|	0.000000000
+factor(county)Barry	| 1.950000e+00	|	0.000000000
+factor(county)Bay	| 2.600000e+00	|	0.000000000
+factor(county)Benzie	| -4.350000e+00	|	0.000000000
+factor(county)Berrien	| 1.100000e+00	|	0.000000000
+... with 73 more rows of counties | |
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The R-squared value of the second model was much higher than the first (R-squared = 1), indicating a better model fit. Due to this, we decided to make two additional bar plots outlining the aggregate obesity rate by county and cuisine, respectively. We found the bar plots to be an interesting comparison to the results featured in our models.
 
