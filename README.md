@@ -10,4 +10,4 @@ Prior research for obesity is heavily focused on fast food restaurants specifica
 
 [See the full report](Oh_Zmich_727_Term_Project.pdf)
 
-[See the Rmarkdown file with R code embedded](Term Project.Rmd)
+[See the Rmarkdown file with R code embedded](https://github.com/daraeoh/survmeth727/blob/master/Term%20Project.Rmd)
